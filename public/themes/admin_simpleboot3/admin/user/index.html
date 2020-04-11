@@ -1,0 +1,73 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a>{:lang('ADMIN_USER_INDEX')}</a></li>
+			<li><a href="{:url('user/add')}">添加管理员</a></li>
+		</ul>
+        <form class="well form-inline margin-top-20" method="post" action="{:url('User/index')}">
+            用户名:
+            <input type="text" class="form-control" name="user_login" style="width: 120px;" value="{:input('request.user_login/s','')}" placeholder="请输入{:lang('USERNAME')}">
+            邮箱:
+            <input type="text" class="form-control" name="user_email" style="width: 120px;" value="{:input('request.user_email/s','')}" placeholder="请输入{:lang('EMAIL')}">
+            <input type="submit" class="btn btn-primary" value="搜索" />
+            <a class="btn btn-danger" href="{:url('User/index')}">清空</a>
+        </form>
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th width="50" style="text-align: center;">ID</th>
+					<th style="text-align: center;">{:lang('USERNAME')}</th>
+					<th style="text-align: center;">{:lang('EMAIL')}</th>
+					<th style="text-align: center;">{:lang('STATUS')}</th>
+					<th style="text-align: center;">{:lang('LAST_LOGIN_TIME')}</th>
+					<th style="text-align: center;">{:lang('LAST_LOGIN_IP')}</th>
+					<th width="230" style="text-align: center;">{:lang('ACTIONS')}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<php>$user_statuses=array("0"=>lang('USER_STATUS_BLOCKED'),"1"=>lang('USER_STATUS_ACTIVATED'),"2"=>lang('USER_STATUS_UNVERIFIED'));</php>
+				<foreach name="users" item="vo">
+				<tr>
+					<td align="center">{$vo.id}</td>
+					<td align="center">
+						<if condition="$vo['user_url']"><a href="{$vo.user_url}" target="_blank" title="{$vo.signature}">{$vo.user_login}</a><else />{$vo.user_login}</if></td>
+					<td align="center">{$vo.user_email}</td>
+					<td align="center">{$user_statuses[$vo['user_status']]}</td>
+					<td align="center">
+						<if condition="$vo['last_login_time'] eq 0">
+							{:lang('USER_HAVE_NOT_LOGIN')}
+						<else />
+							{:date('Y-m-d H:i:s',$vo['last_login_time'])}
+						</if>
+					</td>
+					<td align="center">{$vo.last_login_ip}</td>
+					<td align="center">
+						<if condition="$vo['id'] eq 1 || $vo['id'] eq cmf_get_current_admin_id()">
+							<a class="btn btn-xs btn-success disabled">{:lang('EDIT')}</a>  
+							<a class="btn btn-xs btn-danger disabled">{:lang('DELETE')}</a>
+							<if condition="$vo['user_status'] eq 1">
+								<a class="btn btn-xs btn-danger disabled">{:lang('BLOCK_USER')}</a>
+							<else />
+								<a class="btn btn-xs btn-success disabled">{:lang('ACTIVATE_USER')}</a>
+							</if>
+						<else />
+							<a class="btn btn-xs btn-success" href='{:url("user/edit",array("id"=>$vo["id"]))}'>{:lang('EDIT')}</a>
+							<a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('user/delete',array('id'=>$vo['id']))}">{:lang('DELETE')}</a>
+							<if condition="$vo['user_status'] eq 1">
+								<a class="btn btn-xs btn-danger js-ajax-dialog-btn" href="{:url('user/ban',array('id'=>$vo['id']))}" data-msg="{:lang('BLOCK_USER_CONFIRM_MESSAGE')}">{:lang('BLOCK_USER')}</a>
+							<else />
+								<a class="btn btn-xs btn-success js-ajax-dialog-btn" href="{:url('user/cancelban',array('id'=>$vo['id']))}" data-msg="{:lang('ACTIVATE_USER_CONFIRM_MESSAGE')}">{:lang('ACTIVATE_USER')}</a>
+							</if>
+						</if>
+					</td>
+				</tr>
+				</foreach>
+			</tbody>
+		</table>
+		<div class="pagination">{$page}</div>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

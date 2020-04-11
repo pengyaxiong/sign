@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>首页 {$site_info.site_name|default=''}</title>
+    <meta name="keywords" content="{$site_info.site_seo_keywords|default=''}"/>
+    <meta name="description" content="{$site_info.site_seo_description|default=''}">
+    <include file="public@head"/>
+
+    <link href="__TMPL__/public/assets/simpleboot3/themes/simpleboot3/bootstrap.min.css" rel="stylesheet">
+    <link href="__TMPL__/public/assets/css/tube.css" rel="stylesheet">
+    <link rel="stylesheet" href="__STATIC__/js/layui/css/layui.css" media="all">
+    <link href="__TMPL__/public/assets/css/user-center.css" rel="stylesheet">
+    <style>
+        .link-detail,.link-edit{
+            text-decoration:none!important;
+            color: #000;
+        }
+        .link{
+            color: #495df5;
+            border-right: 1px solid #ccc;
+            padding-right: 8px;
+            margin-right: 8px;
+        }
+        .link:last-child{
+            border-right: none;
+            margin-right: 0px;
+            padding-right: 0px;
+        }
+    </style>
+</head>
+<hook name="before_head_end"/>
+<body class="body-white">
+    <div class="templatemo-content">
+        <!--  我的应用左侧 -->
+        <include file="public@tube"/>
+        <!--  我的应用左侧 -->
+
+        <!--  内容中心 -->
+        <div class="templatemo-body">
+            <div class="templatemo-body-title">
+                证书管理
+                <a href="/user/certificate/add_certificate" class="title-more">添加证数</a>
+            </div>
+            <div class="templatemo-body-table">
+                <table class="templatemo-table table">
+                    <thead>
+                        <th>ID</th>
+                        <th>证书备注</th>
+                        <th>剩余可测试数量</th>
+                        <th>已绑定UDID数量</th>
+                        <th>状态</th>
+                        <th>添加时间</th>
+                        <th>操作</th>
+                    </thead>
+                    <tbody>
+                        <if condition="count($list) == 0">
+                            <tr class="">
+                                <td colspan="7">
+                                    <img src="__TMPL__/public/static/image/abnor_no_data.png?x-oss-process=style/default">
+                                    <p style="font-size: 16px;margin-top: 20px;margin-bottom: 20px">可用证数列表为空</p>
+                                </td>
+                            </tr>
+                        <else/>
+                            <foreach name="list" item="vo">
+                                <tr>
+                                    <td>{$vo.id}</td>
+                                    <td>{$vo.mark}</td>
+                                    <td>{$vo.limit_count}</td>
+                                    <td>{$vo.total_count}</td>
+                                    <td>{$vo.status == 0 ? '未启用' : '已启用'}</td>
+                                    <td>{:date('Y-m-d H:i:s',$vo['create_time'])}</td>
+                                    <td>
+                                        <a class="link link-detail" href="/user/certificate/edit_certificate">编辑</a>
+                                        <a class="link link-detail j-del" id="j-del" data-id="{$vo.id}">删除</a>
+                                    </td>
+                                </tr>
+                            </foreach>
+                        </if>
+                    </tbody>
+                </table>
+				<div class="pagination">{$page}</div>
+            </div>
+        </div>
+        <!--  内容中心 -->
+    </div>
+
+    <script src="__TMPL__/public/assets/js/slippry.min.js"></script>
+    <script src="/static/js/layer/layer.js"></script>
+    <script type="text/javascript">
+        $(".j-del").click(function(){
+            var id = $(this).attr('data-id');
+            layer.confirm('是否要删除？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                $.ajax({
+                    url: '/user/certificate/del_certificate',
+                    type: 'POST', //GET
+                    data: {id: id},
+                    timeout: 5000,    //超时时间
+                    dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                    success: function (data) {
+                        layer.msg(data.msg);
+                        if(data.code ==1){
+                            window.location.reload();
+                        }
+
+                    }
+                });
+            });
+
+        })
+    </script>
+</div>
+</body>
+<hook name="before_body_end"/>
+</html>

@@ -1,0 +1,328 @@
+html,body{
+    background-color: #fafafa;
+}
+.templatemo-content{
+    display: flex;
+    min-height: 100%;
+}
+.templatemo-sidebar{
+    width: 300px;
+    background-color: #fff;
+    box-shadow: 6px 0 16px 0 rgba(154,167,179,.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 1;
+}
+.templatemo-sidebar-header{
+    text-align: center;
+    margin: 30px 0;
+}
+.templatemo-sidebar-header .header-avatar{
+    width: 120px;
+    height: 120px;
+    border-radius: 100%;
+    margin: 0 auto;
+}
+.templatemo-sidebar-header .header-avatar img{
+    width: 120px;
+    height: 120px;
+    border-radius: 100%;
+}
+.templatemo-sidebar-header .header-edit{
+
+}
+.templatemo-sidebar-header .header-edit a{
+    color: #000;
+}
+.templatemo-sidebar-nav a {
+    color: #000;
+    display: block;
+    padding: 30px;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    text-align: center;
+}
+.templatemo-sidebar-nav a.active, .templatemo-sidebar-nav a:hover {
+    background: #f1f2f4;
+    border-left: 8px solid #2198f0;
+    border-right: 8px solid #2198f0;
+    color: #2198f0;
+}
+
+.templatemo-body{
+    padding: 30px 30px 30px 330px;
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.templatemo-body h5{
+    font-size: 22px;
+    margin-bottom: 15px;
+
+}
+
+.layui-btn{
+    padding: 0 30px;
+    box-shadow: 0 2px 4px 0 rgba(153,172,204,.47);
+}
+
+.sq-table{
+    border: 1px solid #ececec;
+    background-color: #fff;
+}
+.sq-table tr{
+    border-bottom: 1px solid #ececec;
+}
+.sq-table thead tr{
+    background-color: #f5f6f8;
+}
+.sq-table td,.sq-table th{
+    padding: 15px 0;
+    text-align: center;
+    border: none;
+}
+
+.sq-logo{
+    color: #000;
+    text-align: center;
+    margin: 30px 0;
+}
+.sq-logo img{
+    width: 100px;
+    height: 100px;
+    margin-bottom: 5px;
+}
+.sq-btn{
+    font-size: 14px;
+    box-sizing: border-box;
+    display: block;
+    padding: 10px 30px;
+    line-height: 26px;
+    color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(153,172,204,.47);
+    background: linear-gradient(90deg,#348ef1,#49afff);
+    cursor: pointer;
+    border-radius: 30px;
+    margin: 20px auto 0;
+    text-align: center;
+    width: 80%;
+}
+
+.sq-upload-app{
+    display: none;
+}
+.sq-upload-app .app-agree{
+    padding: 20px 20px 0;
+}
+.sq-upload-app .app-form{
+    text-align: center;
+    padding: 30px;
+}
+.sq-upload-app .app-form dl{
+    text-align: left;
+    margin-bottom: 30px;
+}
+.sq-upload-app .app-form dl dt{
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+.sq-upload-app .app-form dl dd{
+    line-height: 28px;
+}
+.sq-upload-app .app-agree .app-agree__title{
+    text-align: center;
+    margin-bottom: 10px;
+}
+.sq-upload-app .app-agree .app-agree__content{
+    line-height: 28px;
+    color: #777;
+}
+.sq-upload-app .app-agree .app-agree__content .bold{
+    text-indent: 20px;
+    color: #f72c2c;
+}
+
+.sq-upload-btn{
+    box-shadow: 0 2px 4px 0 rgba(153,172,204,.47);
+    background: linear-gradient(90deg,#348ef1,#49afff);
+    color: #fff;
+    border: none;
+    width: 250px;
+    height: 50px;
+    margin: 0 auto;
+    border-radius: 100px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.sq-upload-btn.disabled{
+    background: #ccc;
+    color: #fff;
+}
+
+
+
+.sq-user{
+
+}
+.sq-user .sq-user__title{
+    margin-bottom: 10px;
+    color: #000;
+    font-size: 22px;
+    font-weight: bold;
+}
+.sq-user .sq-user__content{
+    box-shadow: 3px 3px 3px #ececec;
+    border: 1px solid #ececec;
+    flex: 3;
+    box-sizing: border-box;
+    height: 254px;
+}
+
+.sq-user .sq-user__body{
+    display: flex;
+}
+.sq-user__content .content-head{
+    background: #f5f6f8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 3px 3px 0 0;
+    padding: 30px;
+}
+.sq-user__content .content-head .content-head__info{
+    display: flex;
+    align-items: center;
+    flex: 3;
+}
+.sq-user__content .content-head .content-head__info dl{
+    margin-left: 20px;
+}
+.sq-user__content .content-head .content-head__info dt{
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+.sq-user__content .content-head  .content-head__count{
+    display: flex;
+    align-items: flex-end;
+    flex: 1;
+}
+.sq-user__content .content-head  .content-head__count .count-title{
+    margin-bottom: 10px;
+    color: #999;
+}
+.sq-user__content .content-head  .content-head__count dl{
+    display: flex;
+    align-items: baseline;
+}
+.sq-user__content .content-head  .content-head__count dt{
+    font-size: 30px;
+    font-weight: bold;
+}
+.sq-user__content .content-head  .content-head__count dd{
+    color: #999;
+    margin-left: 6px;
+    position: relative;
+    bottom:2px;
+}
+.sq-user__content .content-body{
+    display: flex;
+    width: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+}
+.sq-user__content .content-body dl{
+    flex: 1;
+}
+.sq-user__content .content-body dl dt{
+    color: #999;
+    margin-bottom: 5px;
+}
+.sq-user__content .content-body dl dd{
+    font-size: 24px;
+}
+
+.sq-user .sq-user__set{
+    flex: 1;
+    margin-left: 30px;
+}
+.sq-user .sq-user__set dl{
+    margin-bottom: 10px;
+    box-shadow: 3px 3px 3px #ececec;
+    border: 1px solid #ececec;
+    display: flex;
+    align-items: center;
+    height: 122px;
+    box-sizing: border-box;
+}
+.sq-user .sq-user__set dl:last-child{
+    margin-bottom: 0;
+}
+.sq-user .sq-user__set dl dt{
+    background-color: #fafafa;
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.sq-user .sq-user__set dl dd{
+    flex: 5;
+    padding-left: 20px;
+}
+.sq-user .sq-user__set dl dd h5{
+    font-size: 17px;
+    color: #000;
+    margin-bottom: 10px;
+}
+.sq-user .sq-user__set dl dd p{
+    color: #999;
+}
+.sq-app{
+    margin-top: 20px;
+}
+.sq-app .sq-app__title{
+    margin-bottom: 10px;
+    color: #000;
+    font-size: 22px;
+    font-weight: bold;
+}
+.sq-app .sq-app__img{
+    border-radius: 100%;
+}
+.sq-app .sq-app__table{
+    box-shadow: 3px 3px 3px #ececec;
+}
+
+.sq-count{
+    margin-top: 20px;
+}
+.sq-count .sq-count__title{
+    margin-bottom: 10px;
+    color: #000;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.sq-page{
+    display: flex;
+    justify-content: center;
+}
+.sq-page li{
+    border: 1px solid #ececec;
+    padding: 5px 10px;
+    margin-right: 5px;
+}
+.sq-page li.disabled{
+    color: #ccc;
+    border-color: #ccc;
+    cursor: default;
+}
+.sq-page li.active{
+    color: #fff;
+    border-color: #348ef1;
+    background-color:#348ef1;
+
+}

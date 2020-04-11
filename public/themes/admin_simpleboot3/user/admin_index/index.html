@@ -1,0 +1,183 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <li class="tabs_li tabs_index active"><a>{:lang('USER_INDEXADMIN_INDEX')}</a></li>
+        <li class="tabs_li tabs_add"><a href="{:url('user/adminIndex/add')}">添加用户</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20" method="post" action="{:url('user/adminIndex/index')}">
+        用户ID：
+        <input class="form-control" type="text" name="uid" style="width: 200px;" value="{:input('request.uid')}"
+               placeholder="请输入用户ID">
+        &nbsp;&nbsp;&nbsp;关键字：
+        <input class="form-control" type="text" name="keyword" style="width: 200px;" value="{:input('request.keyword')}"
+               placeholder="用户名/昵称/邮箱">
+	
+        <input type="submit" class="btn btn-primary" value="搜索"/>
+        <a class="btn btn-danger" href="{:url('user/adminIndex/index')}">清空</a>
+    </form>
+    <form method="post" class="js-ajax-form">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th style="text-align: center">ID</th>
+                <th style="text-align: center">手机</th>
+                <th style="text-align: center">公有池剩余签名数</th>
+                <th style="text-align: center">总安装数</th>
+                <th style="text-align: center">安卓下载数</th>
+                <th style="text-align: center">总充值金额</th>
+                <th style="text-align: center">上级代理</th>
+                <th style="text-align: center">{:lang('STATUS')}</th>
+				<th style="text-align: center;">备注</th>
+                <th style="text-align: center">注册时间</th>
+                <th style="text-align: center">最后登录时间</th>
+                <th style="text-align: center">{:lang('ACTIONS')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <php>
+                $user_statuses=array("0"=>lang('USER_STATUS_BLOCKED'),"1"=>lang('USER_STATUS_ACTIVATED'),"2"=>lang('USER_STATUS_UNVERIFIED'));
+            </php>
+            <foreach name="list" item="vo">
+                <tr>
+                    <td align="center">{$vo.id}</td>
+                    <td align="center">{$vo.mobile}</td>
+                    <td align="center">{$vo.sup_down_public|default='0'}</td>
+                    <td align="center">{$vo.udid_count}</td>
+                    <td align="center">{$vo.andriod}</td>
+                    <td align="center">{$vo.coin_count}</td>
+                    <td align="center">{$vo.pusermobile|default='-'}</td>
+                    <td align="center">
+                        <switch name="vo.user_status">
+                            <case value="0">
+                                <span class="label label-danger">{$user_statuses[$vo['user_status']]}</span>
+                            </case>
+                            <case value="1">
+                                <span class="label label-success">{$user_statuses[$vo['user_status']]}</span>
+                            </case>
+                            <case value="2">
+                                <span class="label label-warning">{$user_statuses[$vo['user_status']]}</span>
+                            </case>
+                        </switch>
+                	</td>
+					<td width="150" align="center">{$vo.more}</td>
+                	<td align="center">{:date('Y-m-d H:i:s',$vo['create_time'])}</td>
+                	<td align="center">{:date('Y-m-d H:i:s',$vo['last_login_time'])}</td>
+                    <td align="center">
+                        <a class="btn btn-xs btn-primary" href='{:url("adminIndex/edit",array("id"=>$vo["id"]))}'>{:lang('EDIT')}</a>
+						<a class="btn btn-xs btn-primary" href="#" onclick="toLevel('{$vo.id}')">{:lang('LOWER_LEVEL')}</a>
+                        <neq name="vo.id" value="1">
+                        	<empty name="vo.is_dl">
+                                <a href="{:url('adminIndex/dl',array('id'=>$vo['id']))}"
+                                   class="btn btn-xs btn-primary js-ajax-dialog-btn"
+                                   data-msg="确认设置该会员为代理？">代理</a>
+                                <else/>
+                                <a href="{:url('adminIndex/cancelDl',array('id'=>$vo['id']))}" 
+                                   class="btn btn-xs btn-danger js-ajax-dialog-btn"
+                                   data-msg="取消该该代理？">取消</a>
+                            </empty>
+                            
+                            <empty name="vo.user_status">
+                                <a href="{:url('adminIndex/cancelban',array('id'=>$vo['id']))}"
+                                   class="btn btn-xs btn-primary js-ajax-dialog-btn"
+                                   data-msg="{:lang('ACTIVATE_USER_CONFIRM_MESSAGE')}">{:lang('ACTIVATE_USER')}</a>
+                                <else/>
+                                <a href="{:url('adminIndex/ban',array('id'=>$vo['id']))}" 
+                                   class="btn btn-xs btn-danger js-ajax-dialog-btn"
+                                   data-msg="{:lang('BLOCK_USER_CONFIRM_MESSAGE')}">{:lang('BLOCK_USER')}</a>
+                            </empty>
+                            <else/>
+                            <a class="btn btn-xs btn-danger disabled">{:lang('BLOCK_USER')}</a>
+                        </neq>
+						<neq name="vo.id" value="1">
+							<a class="btn btn-xs btn-danger js-ajax-dialog-btn" href="{:url('adminIndex/delete',array('id'=>$vo['id']))}"data-msg="{:lang('确认删除此会员吗？')}">{:lang('DELETE')}</a>
+							<else/>
+                            <a class="btn btn-xs btn-danger disabled">{:lang('DELETE')}</a>
+						</neq>
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <div class="pagination">{$page}</div>		
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+	function toLevel(pid){
+		layer.open({
+		  type: 2,
+		  area: ['60%', '50%'],
+		  fixed: false, //不固定
+		  maxmin: true,
+		  title:'下级管理',
+		  content: "{:url('admin/level/index')}?pid="+pid+"&page=1"
+		});
+	}
+	
+	function user_add(){
+		$('.tabs_li').removeClass('active');
+		$('.tabs_add').addClass('active');
+		layer.open({
+		  type: 2,
+		  area: ['340px', '360px'],
+		  fixed: false, //不固定
+		  maxmin: true,
+		  title:'添加用户',
+		  content: "{:url('adminIndex/add')}",
+		  end:function(){
+			  $('.tabs_li').removeClass('active');
+			  $('.tabs_index').addClass('active');
+		  }
+		});
+	}
+	
+	function toPid(pid){
+		layer.open({
+		  type: 2,
+		  area: ['60%', '50%'],
+		  fixed: false, //不固定
+		  maxmin: true,
+		  title:'更改上级',		
+		  content: "{:url('admin/level/index')}?pid="+pid+"&page=1"
+		});
+	}
+	
+	function editPid(obj,id){
+		pid = obj.options[obj.options.selectedIndex].value;
+		$.get("{:url('user/adminIndex/editPid')}?id="+id+'&pid='+pid,function(res){
+			if(res.code==200){
+				layer.msg('修改成功');
+			}else{
+				layer.msg('修改失败');
+			}
+		});
+		
+	}
+	
+	function downData(uid,nickname){
+		layer.open({
+		  type: 2,
+		  area: ['60%', '50%'],
+		  fixed: false, //不固定
+		  maxmin: true,
+		  title:'详细数据-'+nickname,
+		  shade: 0,
+		  content: "{:url('admin/level/downData')}?uid="+uid
+		});
+	}
+	
+	function toAdd(pid){
+		layer.open({
+		  type: 2,
+		  area: ['60%', '50%'],
+		  fixed: false, //不固定
+		  maxmin: true,
+		  title:'可设置下级人员',
+		  content: "{:url('admin/level/lists')}?pid="+pid
+		});
+	}
+</script>
+</body>
+</html>

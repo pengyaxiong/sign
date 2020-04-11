@@ -1,0 +1,1088 @@
+<include file="public@head"/>
+
+<style>
+    html,
+    body,
+    div,
+    ul,
+    li,
+    dl,
+    dt,
+    dd,
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        line-height: 1.5;
+        font-size: 14px;
+        background: #FAFBFC;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-style: normal;
+        font-weight: normal;
+    }
+    ul,
+    li,
+    dl,
+    dt,
+    dd {
+        list-style: none;
+    }
+
+    .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+    }
+
+    .wrap-footer {
+        max-width: 896px;
+        margin: 0 auto;
+    }
+
+    .show-udid-wrap {
+        display: none;
+    }
+
+    .grey-bg {
+        background: #FAFBFC;
+    }
+
+    .no-safari {
+        display: none;
+    }
+
+    .btn {
+        position: relative;
+        display: inline-block;
+        width: 150px;
+        height: 44px;
+        line-height: 44px;
+        background: rgba(255, 255, 255, 0);
+        border: 1px solid rgba(255, 255, 255, .3);
+        border-radius: 22px;
+        font-size: 20px;
+    }
+
+    .get-udid {
+        display: none;
+    }
+
+    .no-safari {
+        display: none;
+    }
+
+    .icon {
+        display: inline-block;
+        vertical-align: middle;
+        background-image: url("__TMPL__/public/static/image/icon.png");
+        background-repeat: no-repeat;
+    }
+
+    .icon-advantage1,
+    .icon-advantage2,
+    .icon-advantage3,
+    .icon-advantage4 {
+        width: 70px;
+        height: 70px;
+    }
+
+    .icon-advantage2 {
+        background-position: -76px 0;
+    }
+
+    .icon-advantage3 {
+        background-position: -152px 0;
+    }
+
+    .icon-advantage4 {
+        background-position: -228px 0;
+    }
+
+    .logo * {
+        display: inline-block;
+        vertical-align: middle;
+
+    }
+
+    .logo span {
+        margin-left: 5px;
+        font-size: 20px;
+    }
+
+    .tools a {
+        margin-left: 12px;
+    }
+
+    .banner {
+        padding: 1px 0;
+        height: 553px;
+        background-image: url("__TMPL__/public/static/image/banner.png");
+        background-position: top center;
+        background-repeat: no-repeat;
+        color: #fff;
+    }
+
+    .banner .wrap {
+        text-align: center;
+    }
+
+    .banner .wrap > div {
+        text-align: center;
+    }
+
+    .banner strong {
+        display: block;
+        position: relative;
+        margin-top: 60px;
+        font-size: 42px;
+        font-weight: 700;
+    }
+
+    .banner p {
+        margin: 30px 0;
+        line-height: 2;
+        font-size: 18px;
+    }
+
+    .banner .btn {
+        margin: 0 20px;
+    }
+    .qq-list a {
+        margin: 0 20px 0 5px;
+    }
+
+    .udid-wrap {
+        display: none;
+    }
+
+    .advantage-bg {
+        height: 730px;
+    }
+
+    .our-advantages {
+        box-sizing: border-box;
+        padding-top: 85px;
+        height: 585px;
+    }
+
+    .advantage {
+        position: relative;
+        top: -75px;
+        padding: 75px 106px 47px;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0px 13px 31px 0px rgba(161, 167, 178, 0.08);
+        border-radius: 10px;
+    }
+
+    .title {
+        font-size: 31px;
+        color: #3A4250;
+        font-weight: bold;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-blue {
+        color: #2a9ff6 !important;
+        font-size: 20px;
+    }
+
+    .img-wrap {
+        width: 200px;
+        height: 200px;
+        margin: 60px auto 0;
+    }
+
+    .img-wrap img {
+        width: 200px;
+        height: 200px;
+    }
+
+    .division {
+        width: 36px;
+        height: 4px;
+        background-color: #2a9ff6;
+        border-radius: 2px;
+        margin: 30px auto 0;
+    }
+
+    .title-info {
+        margin-top: 20px;
+        color: #3A4250;
+    }
+
+    .advantage-list {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .advantage-list li {
+        position: relative;
+        box-sizing: border-box;
+        flex: 0 0 50%;
+        padding-left: 110px;
+        margin-top: 80px;
+    }
+
+    .advantage-list li .icon {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .advantage-list li p {
+        width: 250px;
+        color: #7F8FA4;
+    }
+
+    .advantage-list li strong {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        font-size: 16px;
+        color: rgba(58, 66, 80, 1);
+    }
+
+    .different-list dt {
+        position: relative;
+        margin-bottom: 60px;
+        font-size: 20px;
+        color: #2A9FF6;
+    }
+
+    .different-list dt:after {
+        content: ' ';
+        position: absolute;
+        top: 100%;
+        left: 0;
+        margin-top: 20px;
+        width: 23px;
+        height: 3px;
+        background: rgba(42, 159, 246, 1);
+        border-radius: 2px;
+    }
+
+    .different-list dd {
+        margin-bottom: 20px;
+        color: #3A4250
+    }
+
+    .different-list dd:before {
+        content: ' ';
+        display: inline-block;
+        vertical-align: middle;
+        width: 6px;
+        height: 6px;
+        margin-right: 10px;
+        background: rgba(42, 159, 246, 1);
+        border-radius: 50%;
+    }
+
+    .procedure-list li {
+        position: relative;
+        flex: 1;
+        text-align: center;
+        font-size: 16px;
+        color: #3A4250;
+    }
+
+    .procedure-list li:after {
+        content: ' ';
+        position: absolute;
+        top: 29px;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-color: transparent transparent transparent rgba(42, 159, 246, .5);
+        border-width: 7px 0 7px 11px;
+    }
+
+    .procedure-list li:last-child:after {
+        display: none;
+    }
+    .problem-box-2 {
+        padding: 75px 0 0px;
+    }
+
+    .problem-box-2 .title {
+        text-align: center;
+    }
+
+    .problem-list-2 {
+        margin-top: 0px;
+        color: #A3A4A8;
+    }
+
+    .problem-list-2 li {
+        margin-top: 0px;
+        margin-bottom: 31px;
+    }
+
+    .problem-list-2 strong {
+        color: #3A4250;
+        font-size: 20px;
+    }
+
+    .problem-list-2 p {
+        margin-top: 5px;
+    }
+
+    .problem-list-2 p span {
+        font-size: 20px;
+    }
+
+    .foot {
+        padding: 35px 0 64px;
+        background: rgba(18, 23, 36, 1);
+    }
+
+    .foot .logo {
+        float: none;
+    }
+
+    .foot .logo,
+    .foot-list li {
+        display: inline-block;
+        vertical-align: top;
+        color: #949EBA;
+    }
+
+    .foot-list li {
+        margin-left: 185px;
+    }
+
+    .foot-list strong {
+        display: block;
+        margin-bottom: 15px;
+        color: #fff;
+    }
+
+    .Yellowbtn {
+        width: 274px;
+        height: 36px;
+        line-height: 36px;
+        color: #fff;
+        background: #FFB417;
+        border-radius: 18px;
+        margin: 0px auto;
+        font-size: 18px;
+    }
+
+    .banner-tip {
+        margin: 35px auto;
+        font-size: 18px;
+    }
+    .pop h3 {
+        margin-bottom: 15px;
+        font-size: 20px;
+        font-weight: 700;
+    }
+    .pop-tip .icon {
+        margin: -4px 15px 0 0;
+    }
+
+    .pop .btn {
+        width: 160px;
+        height: 44px;
+        line-height: 44px;
+        background: #269bff;
+        border-color: #269bff;
+        font-size: 16px;
+        color: #fff;
+        text-align: center;
+    }
+
+    @keyframes move-bg {
+        to {
+            left: -1180px;
+        }
+    }
+    @keyframes in {
+        from {
+            transform: translateY(100px)
+        }
+
+        to {
+            transform: translateY(0)
+        }
+    }
+
+    @keyframes out {
+        from {
+            transform: translateY(0)
+        }
+
+        to {
+            transform: translateY(150px);
+            opacity: 0;
+        }
+    }
+
+    #video-box > div {
+        position: relative;
+        width: 70%;
+        margin: 30px auto;
+    }
+
+    .serve-info > span,
+    .to-top > span {
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .icon-serve-box strong {
+        display: block;
+        padding-bottom: 7px;
+        margin-bottom: 15px;
+        position: relative;
+    }
+
+    .icon-serve-box strong:after {
+        content: ' ';
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 21px;
+        height: 2px;
+        background: rgba(62, 135, 230, 1);
+        border-radius: 1px;
+    }
+
+    .serve-qq-list li {
+        line-height: 40px;
+    }
+
+    .serve-qq-list li i {
+        margin: -4px 15px 0 0;
+    }
+
+    .serve-qq-list li a:hover {
+        color: #3E87E6;
+    }
+
+    .serve-qq-list .btn {
+        float: right;
+        width: 100px;
+        height: 32px;
+        line-height: 32px;
+    }
+
+    .pop .serve-qq-list li {
+        width: 80%;
+        text-align: left;
+        margin: 5px auto;
+    }
+
+    .serve-info:hover .icon-serve-box {
+        display: block;
+    }
+
+    .serve-info-fixed > div,
+    .phone-serve > div {
+        margin: 0 0 10px;
+        padding: 10px 0;
+        background: #fff;
+        width: 107px;
+        border: #DFE1E6 1px solid;
+        color: #7A7F88;
+        text-align: center;
+    }
+
+    .serve-info-fixed > div strong,
+    .phone-serve > div strong {
+        display: block;
+        margin-top: 10px;
+        font-weight: normal;
+    }
+
+    .phone-serve > div {
+        width: 90px;
+    }
+
+    .phone-serve > div img {
+        width: 70px;
+    }
+
+    .serve-info-fixed .serve-qq-list li {
+        margin-bottom: 7px;
+        height: 26px;
+        line-height: 26px;
+        background: #3EA2FF;
+        color: #fff;
+        font-size: 12px;
+        border-radius: 3px;
+    }
+
+    .serve-info-fixed .serve-qq-list li:nth-child(2) {
+        background: #FFA200;
+    }
+
+    .serve-info-fixed .serve-qq-list li:nth-child(3) {
+        background: #33CC99;
+    }
+
+    .serve-info-fixed .serve-qq-list li i {
+        margin-right: 5px;
+    }
+
+    .serve-info-fixed .serve-qq-list li a:hover {
+        color: #fff;
+    }
+
+    .ours-advantage-box .title {
+        text-align: center;
+    }
+
+    .ours-advantage dl {
+        position: relative;
+        float: left;
+        width: 30%;
+        padding: 80px 0;
+        margin-top: 56px;
+        text-align: center;
+        background: #F2F3F5;
+        box-shadow: 0px 13px 31px 0px rgba(43, 97, 218, 0.3);
+    }
+
+    .ours-advantage dl.app {
+        z-index: 3;
+        width: 40%;
+        margin: 0;
+        padding-top: 40px;
+        background: linear-gradient(-45deg, rgba(57, 178, 255, 1), rgba(23, 67, 191, 1));
+        border-radius: 10px;
+        color: #fff;
+    }
+
+    .ours-advantage dl:nth-child(2) {
+        z-index: 2;
+    }
+
+    .ours-advantage dt {
+        position: relative;
+        padding-bottom: 25px;
+        margin-bottom: 60px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #3A4250;
+    }
+
+    .ours-advantage dl.app dt {
+        font-size: 30px;
+        color: #fff;
+    }
+
+    .ours-advantage dt img {
+        display: block;
+        margin: 0 auto 20px;
+    }
+
+    .ours-advantage dt:after {
+        content: ' ';
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%);
+        width: 30px;
+        height: 3px;
+        background: rgba(43, 132, 228, 1);
+        border-radius: 2px;
+    }
+
+    .ours-advantage dl.app dt:after {
+        background: #FFE534;
+    }
+
+    .ours-advantage dd {
+        width: 50%;
+        margin: 30px auto 0;
+        text-align: left;
+        color: #7A7F88;
+        font-size: 18px;
+    }
+    .ours-advantage dl.app dd {
+        width: 70%;
+        color: #fff;
+    }
+    .ours-advantage dl.app dd:before {
+        content: ' ';
+        display: inline-block;
+        vertical-align: middle;
+        margin: -4px 15px 0 0;
+        width: 10px;
+        height: 10px;
+        background: #ffe534;
+        border-radius: 100%;
+    }
+    @media only screen and (max-width: 1180px) {
+        .wrap, .wrap-footer {
+            margin: 0 10px;
+        }
+
+        .ours-advantage dd,
+        .ours-advantage dl.app dd {
+            width: 90%;
+        }
+    }
+    @media only screen and (max-width: 1000px) {
+        .banner {
+            height: auto;
+            padding: 30px 0;
+        }
+
+        .banner strong {
+            margin: 0;
+        }
+
+        .advantage-bg {
+            padding-top: 1px;
+            height: auto;
+        }
+
+        .advantage {
+            position: static;
+            padding: 20px;
+            margin: 20px 0 0;
+        }
+
+        .advantage-list li {
+            margin-top: 20px;
+        }
+        .problem-box-2 {
+            padding: 30px 0;
+        }
+
+        .problem-list-2 {
+            margin-top: 20px;
+        }
+
+        .problem-list-2 li {
+            margin-top: 20px;
+        }
+        .foot-list li {
+            margin-left: 50px;
+        }
+    }
+    @media only screen and (max-width: 800px) {
+        .our-advantages {
+            display: none;
+        }
+
+        .Yellowbtn {
+            margin-bottom: 80px;
+        }
+
+        .show-udid-wrap p {
+            color: #a3a4a8;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .show-udid-wrap .udid-img-wrap {
+            width: 40%;
+            height: 40%;
+            margin: 30px auto 10px;
+        }
+
+        .show-udid-wrap .udid-img-wrap img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .show-udid-wrap .udid-content {
+            width: 100%;
+            min-height: 30px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            background: #f6f6f6;
+            margin: 10px -10px 0;
+            color: #a3a4a8;
+            font-size: 16px;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .img-wrap {
+            width: 60%;
+            height: 60%;
+            margin: 30px auto 0;
+        }
+
+        .advantage {
+            width: 80%;
+            margin: -75px auto 0;
+        }
+
+        .img-wrap img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .get-udid {
+            display: block;
+            margin-bottom: 68px;
+            margin: 38px auto 20px;
+            width: 60%;
+            height: 50px;
+            line-height: 50px;
+            background-color: #067afe;
+            border-radius: 40px;
+            font-size: 20px;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .udid-wrap {
+            display: block;
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .udid-wrap .udid-question {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0px;
+            color: #3a4250;
+            text-align: center;
+        }
+
+        .udid-wrap .udid-answer {
+            font-size: 12px;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0px;
+            color: #a3a4a8;
+        }
+
+        .sign-btn {
+            display: none;
+        }
+
+        .banner-tip2 {
+            display: none;
+        }
+
+        .off {
+            display: none;
+        }
+
+        .banner strong {
+            font-size: 30px;
+        }
+
+        .banner strong:after {
+            margin-top: 0;
+        }
+
+        .no-safari .no-safari__img-wrap {
+            background: url(../imgs/ren.png) no-repeat;
+            width: 65%;
+            height: 200px;
+            background-size: cover;
+            margin: 20px auto 0;
+        }
+
+        .no-safari .no-safari__btn {
+            text-align: center;
+        }
+
+        .no-safari button {
+            margin-top: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 12px;
+            border: none;
+            background: none;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0px;
+            color: #a3a4a8;
+        }
+
+        .banner-tip,
+        .banner p {
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        .btn {
+            width: 110px;
+            height: 32px;
+            line-height: 32px;
+            font-size: 16px;
+        }
+
+        .title {
+            font-size: 18px;
+        }
+
+        .title-info {
+            margin-top: 10px;
+        }
+
+        .advantage-list li p {
+            width: auto;
+        }
+
+        .advantage-list li {
+            flex: 0 0 100%;
+
+        }
+
+        .advantage-list li .icon {
+            zoom: .7;
+        }
+
+        .advantage-list li {
+            padding-left: 60px;
+        }
+
+        .video-play {
+            height: 100px;
+        }
+
+        .play {
+            zoom: .7;
+        }
+
+        .different {
+            height: auto;
+        }
+
+        .different:after {
+            display: none;
+        }
+
+        .problem-list-2 strong,
+        .problem-list-2 p span {
+            font-size: 16px;
+        }
+
+        .pop {
+            left: 10px;
+            right: 10px;
+            transform: translate(0, -50%);
+            width: auto;
+            padding: 40px 0;
+            margin: 0;
+        }
+
+        .pop-tip {
+            margin: 30px 0;
+        }
+
+        .pop:before,
+        .pop:after {
+            display: none;
+        }
+
+        .different-list dt:after {
+            margin-top: 5px;
+        }
+
+        .subhead {
+            font-size: 14px;
+        }
+
+        .ours-advantage dl {
+            display: none;
+        }
+
+        .ours-advantage dl.app {
+            display: block;
+            width: 100%;
+            padding: 20px 0;
+        }
+
+        .ours-advantage dl.app dt {
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .ours-advantage dt img {
+            width: 40px;
+        }
+
+        .ours-advantage dl.app dd {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    }
+    @media only screen and (max-width: 570px) {
+        .play {
+            right: 20px;
+            left: inherit;
+            transform: translate(0, -50%);
+        }
+
+        .procedure-list {
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .procedure-list li {
+            flex: 0 0 33.3333%;
+            margin-top: 20px;
+        }
+
+        .procedure-list li .icon {
+            zoom: .7;
+        }
+
+        .procedure-list li p {
+            font-size: 14px;
+        }
+
+        .foot-list {display: block;margin-top: 20px;}
+        .foot-list li {margin: 0 50px 0 0;}
+        .contact-us:before {position: static;display: inline-block;vertical-align: middle;margin: -4px 10px 0 0;}
+        .qq-list a {margin: 0 5px;}
+        .serve-top, .serve-info-fixed {display: none;}
+        .phone-serve {display: block;}
+    }
+    @media only screen and (max-width: 349px) {
+        .banner .btn {margin: 0 10px;}
+        .logo span {font-size: 16px;}
+        .foot-copy {padding: 5px;height: auto;line-height: 1.5;}
+    }
+</style>
+
+<body>
+    <div class="banner">
+        <div class="wrap">
+            <strong>iOS App超级签名</strong>
+            <div class="banner-tip">你还在用企业签名吗？老用户掉了伤心吗？快来使用超级签名吧！</div>
+            <div class="Yellowbtn">
+                <a href="javascript:void(0)">超级签名一次安装永不受影响</a>
+            </div>
+            <p class="banner-tip2">
+                国内 iOS 应用商店，申请账号、上传应用费时费力？<br>
+                不一样的iOS签名，让您告别掉签烦恼，提高您的应用分发效率，节省大量时间，帮您轻松节省大量获客成本
+            </p>
+            <a class="domain btn sign-btn" href="tencent://message/?uin={$site_info['site_admin_qq']|default=''}&amp;Site=qq&amp;Menu=yes" target="_blank">立即签名</a>
+        </div>
+    </div>
+    <div class="grey-bg advantage-bg">
+        <div class="wrap">
+            <!-- 我们的优势 -->
+            <div class="advantage">
+                <h2 class="title text-center off">轻轻一扫，即可立即获取当前iOS设备的UDID</h2>
+                <div class="division off"></div>
+                <p class="title-info text-center text-blue off">
+                    请使用您的iOS设备扫描下方二维码，即可获取当前设备的UDID</p>
+                <div class="in-safari">
+                    <div class="get-udid-wrap">
+                        <div class="img-wrap">
+                            <!--<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOcAAADnAQMAAADfOtNjAAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAABP0lEQVRYhe2XMbLDIAxE5UnhMkfIUXw0OFqO4iO4dMFYfyVBEs/3r36aZdjGhkejYVmEyNDQ0Dd0V9MusuQJP+vi45WZ2s9tl8cTH92wqE3y0kWP245xAkW9GdX3QGu9ndGjFyruSVlUZP7LsVQ0cgNlZ7fmZapQ0XfZCbObXIqKot5cK9Qi8tDs+0lMTVpmVZyyWCsfnmSkd08KD4ypuEM9PoiptRJer+pU5s0i3uKDmNpmvQIDEe+LTj0SG4WSbZ0lYXjSR8Q0mqPd46P4Wjk5lo+ilUhwoYbMjMenYwlpXFOtXr+Ny3tzGWlbhGzXOF56PmV0tPVIoB4YkYvU1H7i9VRbctBTtvPR+h583b+d0HYNR9nSAbXcqBF4nLs+QiruSX0m27312rFUtOYGpqOxsIfu79ciER0aGvqffgCJdedqMRNCzQAAAABJRU5ErkJggg==" alt="">-->
+                        </div>
+                        <div class="get-udid">点击获取UDID</div>
+                    </div>
+                    <div class="show-udid-wrap">
+                        <p>设备型号: </p>
+                        <div class="udid-img-wrap">
+                            <img src="/static/imgs/phone.png" alt="">
+                        </div>
+                        <p>设备UDID: </p>
+                        <div class="udid-content"></div>
+                        <div class="get-udid copy-udid" data-udid="">复制UDID</div>
+                    </div>
+                    <div class="problem-box-2 off">
+                        <ul class="problem-list-2">
+                            <li>
+                                <strong>Q: 什么是UDID？</strong>
+                                <p><span>A:</span> UDID（Unique Device Identifier）中文意思是设备唯一标识，它是苹果iOS设备的唯一识别码，每一台iOS设备的UDID都是独一无二的。</p>
+                            </li>
+                            <li>
+                                <strong>Q: 如何获取UDID？</strong>
+                                <p><span>A:</span>
+                                    扫描此二维码后点击访问页面的获取UDID，将开始安装描述文件，期间可能会要求输入您的锁屏密码，用于验证是否是您本人安装，安装完成后，即可在新地址中，获取到您的UDID。
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="no-safari">
+                    <div class="no-safari__img-wrap"></div>
+                    <div class="no-safari__btn">
+                        <button class="no-safari__btn2" data-clipboard-text="">温馨提示：请在safari中打开</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grey-bg advantage-bg our-advantages">
+        <div class="wrap-footer">
+            <h2 class="title">我们的优势</h2>
+            <p class="title-info">4大优势告别掉签烦恼，提高应用分发效率</p>
+            <ul class="advantage-list">
+                <li>
+                    <i class="icon icon-advantage1"></i>
+                    <strong>特有机制 告别掉签</strong>
+                    <p>
+                        采取的iOS 超级签名因和企业签名机制不同，掉签概率极低
+                    </p>
+                </li>
+                <li>
+                    <i class="icon icon-advantage2"></i>
+                    <strong>无需越狱 安装即用</strong>
+                    <p>
+                        无需企业签名，无需越狱，无需上架 App Store，下载后安装即用
+                    </p>
+                </li>
+                <li>
+                    <i class="icon icon-advantage3"></i>
+                    <strong>全网价格最低</strong>
+                    <p>以真实设备下载数量进行计费，稳定不限量
+                    </p>
+                </li>
+                <li>
+                    <i class="icon icon-advantage4"></i>
+                    <strong>应用类别不限</strong>
+                    <p>
+                        规避被拒风险，获得专属链接的成功率高达99.99%
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="udid-wrap">
+        <p class="udid-question">什么是UDID？</p>
+        <p class="udid-answer">UDID（Unique Device Identifier）中文意思是设备唯一标识，它是苹果iOS设备的唯一识别码，每一台iOS设备的UDID都是独一无二的。</p>
+        <p class="udid-question">如何获取UDID？</p>
+        <p class="udid-answer">扫描此二维码后点击访问页面的获取UDID，将开始安装描述文件，期间可能会要求输入您的锁屏密码，用于验证是否是您本人安装，安装完成后，即可在新地址中，获取到您的UDID。</p>
+    </div>
+</body>
+
+<include file="public@head"/>

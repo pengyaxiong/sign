@@ -1,0 +1,59 @@
+<include file="public@header"/>
+<style>
+    .sele-img{width:100px;height:50px;line-height:50px;}
+    .sele-img img{width:100%;border-radius: 50%;}
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('members/index')}">会员管理</a></li>
+        <li class="active"><a href="javascript:;">会员应用管理</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20" method="post" action="{:url('members/sele')}">
+        文件id:
+        <input type="text" class="form-control" name="sid" style="width: 200px;" value="{$sele['sid']|default=''}" placeholder="请输入文件id...">
+        下载地址:
+        <input type="text" class="form-control" name="er_logo" style="width: 200px;" value="{$sele['er_logo']|default=''}" placeholder="请输入下载地址...">
+        <input type="hidden" name="id" value="{$uid}">
+        <input type="submit" class="btn btn-primary" value="搜索"/>
+    </form>
+    <form class="js-ajax-form" action="" method="post">
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+                <th width="50" style="text-align: center">ID</th>
+                <th style="text-align: center">应用名称</th>
+                <th style="text-align: center">图标</th>
+                <th style="text-align: center">版本</th>
+                <th style="text-align: center">Build</th>
+                <th style="text-align: center">大小</th>
+                <th style="text-align: center">下载次数</th>
+                <th style="text-align: center">下载地址</th>
+                <th style="text-align: center">更新时间</th>
+                <th width="90" style="text-align: center">操作</th>
+            </tr>
+            </thead>
+            <foreach name="result" item="vo">
+                <tr>
+                    <td align="center"><b>{$vo.id}</b></td>
+                    <td align="center">{$vo.name} ( {$vo.type} )</td>
+                    <td align="center" class="sele-img"><img style="width: 40px;height: 40px;" src="{$vo.img}" class="headicon"></td>
+                    <td align="center"> {$vo.version}</td>
+                    <td align="center">{$vo.build}</td>
+                    <td align="center">{$vo.big}M</td>
+                    <td align="center">{$vo.num}</td>
+                    <td align="center">{$vo.er_logo}</td>
+                    <td align="center">{$vo['addtime'] | date="Y-m-d",###}</td>
+                    <td align="center">
+                        <a class="btn btn-xs btn-danger" href="{:url('members/del',array('id'=>$vo['id']))}">删除</a>
+                    </td>
+                </tr>
+            </foreach>
+        </table>
+        <ul class="pagination">{$page|default=''}</ul>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

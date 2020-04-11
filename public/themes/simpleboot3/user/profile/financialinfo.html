@@ -1,0 +1,82 @@
+<include file="public@head"/>
+
+<style>
+    .financial{background-color: #fff;padding: 30px;display:flex;align-items:center;justify-content:space-between;border: 1px solid #ececec;background-color: #fff;box-shadow: 3px 3px 3px #ececec}
+    .financial-count{}
+    .financial-count__title{color: #999;margin-bottom: 10px;}
+    .financial-count__num{font-size: 30px;}
+    .financial-count__num .small{font-size: 16px;position: relative;top: -2px;}
+    .record{margin-top: 20px;}
+    .record-tab{display: flex;align-items: baseline}
+    .record-tab__item{margin-right: 15px;font-size: 18px;color: #999}
+    .record-tab__item.active{color: #000;font-size: 22px;}
+</style>
+
+<body>
+    <div class="templatemo-content">'
+        <!--  我的应用左侧 -->
+        <include file="public@tube"/>
+        <!--  我的应用左侧 -->
+
+        <div class="templatemo-body">
+            <h5>财务信息</h5>
+            <div class="financial">
+                <div class="financial-count">
+                    <div class="financial-count__title">剩余装机数</div>
+                    <div class="financial-count__num">
+                        <span class="">{$user.sup_down_public}</span>
+                        <span class="small">台</span>
+                    </div>
+                </div>
+                <div class="layui-btn layui-btn-normal layui-btn-radius j-pay-btn">
+                    购买设备
+                </div>
+            </div>
+
+            <div class="record">
+                <div class="record-tab">
+                    <span class="record-tab__item active">消费记录</span>
+                    <a href="{:cmf_url('user/Profile/payLog')}" class="record-tab__item">充值记录</a>
+                </div>
+                <div class="">
+                    <div class="sq-app__table">
+                        <table class="layui-table sq-table">
+                            <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>数量</th>
+									<th>详情</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <if condition="count($iosList) == 0">
+                                    <tr class="">
+                                        <td colspan="4">
+                                            <img src="__TMPL__/public/static/image/abnor_no_data.png?x-oss-process=style/default">
+                                            <p style="font-size: 16px;margin-top: 20px;margin-bottom: 20px">
+                                                消费记录为空
+                                            </p>
+                                        </td>
+                                    </tr>
+                                <else/>
+                                    <foreach name="iosList" id="item">
+                                        <tr>
+                                            <td>{$item.addtime}</td>
+                                            <td>{$item.num}台</td>
+											 <td>{$item.msg}</td>
+                                        </tr>
+                                    </foreach>
+                                </if>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="sq-page">
+                        {$page}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<include file="public@footer"/>

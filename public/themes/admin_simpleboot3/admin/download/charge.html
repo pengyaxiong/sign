@@ -1,0 +1,34 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:;">充值记录</a></li>
+        <li><a href="{:url('download/add_charge')}">人工充值</a></li>
+    </ul>
+
+    <form class="js-ajax-form" action="" method="post" style="margin-top:50px;">
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+                <th width="50" style="text-align: center">ID</th>
+                <th style="text-align: center">会员(id)</th>
+                <th style="text-align: right;">添加下载数</th>
+                <th style="text-align: center">添加时间</th>
+            </tr>
+            </thead>
+            <foreach name="download" item="vo">
+                <tr>
+                    <td align="center">{$key+1}</td>
+                    <td align="center">{$vo.name}({$vo.uid})</td>
+                    <td align="right">{$vo.download}</td>
+                    <td align="center">{$vo['addtime'] |date="Y-m-d H:i:s",###} </td>
+                </tr>
+            </foreach>
+        </table>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+
+</body>
+</html>

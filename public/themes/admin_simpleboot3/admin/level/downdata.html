@@ -1,0 +1,60 @@
+<include file="public@header" />
+<script src="__TMPL__/public/assets/simpleboot3/laydate/laydate.js"></script>
+</head>
+	<body>
+		<div class="wrap js-check-wrap">
+			<div style="height:34px;line-height: 34px;float: left;">日期：</div>
+			<input id="time" class="form-control" style="width: 200px;float: left;" type="text" />
+			<input type="button"  style="float: left;"  class="btn btn_check btn-primary" value="查看">
+		</div>
+		<div class="templatemo-body-title"></div>
+		 <div class="">
+			  <div id="chart"></div>
+		 </div>
+		
+		</div>
+	</body>
+	<script src="__TMPL__/public/assets/simpleboot3/js/frappe-charts.min.js"></script>
+	<script>
+		//常规用法
+		laydate.render({
+		  elem: '#time',
+		  value:'{$time}'
+		});
+		$('.btn_check').click(function(){
+			time = $('#time').val();
+			url = "{:url('admin/level/downData')}?time="+time+"&uid={$uid}";
+			window.location.href = url;
+		});
+		var lineCompositeData = {
+					    labels: {$week},
+					
+					    /*yMarkers: [
+					        {
+					            label: "Average 100 reports/month",
+					            value: 1200,
+					        }
+					    ],*/
+					
+						datasets: [{
+					        "name": "安装量",
+					        "values": {$count_down}
+					    },{
+							"name": "下载量",
+							"values": {$count_udid}
+						}]
+					};
+		let chart = new frappe.Chart( "#chart", { // or DOM element
+		    data: lineCompositeData,
+		
+		    title: "下载数据统计",
+		     type: 'line',
+		    height: 200,
+		    colors: ['purple', '#ffa3ef', 'light-blue'],
+					  lineOptions: {
+						  dotSize: 6
+					  },
+		    
+		  });
+	</script>
+</html>

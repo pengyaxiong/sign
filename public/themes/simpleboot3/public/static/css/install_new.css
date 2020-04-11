@@ -1,0 +1,58 @@
+body{font-size: 16px}
+        .base-info{padding:1.25rem 1.45rem;margin:0 auto;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}
+        .base-info .base-info-l{border-radius:.75rem;overflow:hidden;width:6.5rem;height:6.5rem;box-sizing:border-box;border:1px solid #eee;flex-shrink:0}
+        .base-info .base-info-l>img{width:100%;height:100%}
+        .base-info .base-info-r{position:relative;margin-left:1.2rem}
+        .base-info .base-info-r .title{margin-top:.35rem;font-weight:700;font-size:1.25rem}
+        .base-info .base-info-r .category,.base-info .base-info-r .title{word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+        .base-info .base-info-r .category{color:#999;font-size:1rem}
+        .base-info .base-info-r .base-tag{display: flex;margin-top: 16px;}
+        .base-info .base-info-r .base-tag li{border: 1px solid #0c85da;color: #0c85da;font-size: 12px;border-radius:20px;padding:2px 10px;margin-right: 10px;}
+        .install-btn{display:block;height:1.6rem;line-height:1.6rem;border-radius:.8rem;background:#0477f9;border:1px solid #0477f9;margin-top: 36px;text-align:center;color:#fff;font-size:.85rem;bottom:.35rem;left:0;padding: 0 20px}
+        .rate-info{padding-bottom:1.25rem;margin:0 1.45rem;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between}
+        .rate-info .rate>strong{font-size:1rem;font-weight:700;color:#888}
+        .rate-info .rate>img{width:5rem;margin-left:5px;height: 1rem;margin-top: -4px}
+        .rate-info .rate>p{color:#d8d8d8;font-size:.75rem}
+        .rate-info .classification>strong{color:#8e8f92;font-size:1rem}
+        .rate-info .classification>p{color:#d8d8d8;font-size:.75rem}
+        .summary-info{border-top:1px solid #eee;padding:1.25rem 0;margin:0 1.45rem}
+        .summary-info .summary-info-title{font-size:1.25rem;margin-bottom:.85rem}
+        .summary-info .summary-info-text{position:relative;line-height:1.3rem;font-size:.875rem}.summary-info .summary-info-text .unfold-button[data-v-5cecdd32]{position:absolute;right:0;bottom:0;background:#fff;color:#067afe;width:2rem;padding-left:.3rem}
+        .summary-info .summary-info-text .omit{position:absolute;right:2.3rem;bottom:0;background:#fff;text-align:right}.summary-info .text-fold[data-v-5cecdd32]{word-break:break-all;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+        .summary-info .text-unfold{display:block}
+        .comment-info{border-top:1px solid #eee;padding:1.25rem 1.45rem;}
+        .comment-info .comment-info-title{margin-bottom:.85rem;font-size:1.25rem;font-weight: bold}
+        .comment-info .comment-info-content{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}
+        .comment-info .comment-info-content .comment-info-l>strong{font-size:3.75rem;line-height:2.6875rem;color:#4a4a4e;font-weight:700}
+        .comment-info .comment-info-content .comment-info-l>p{width:5.6875rem;text-align:center;color:#7b7b7b;margin-top:.625rem}
+        .comment-info .comment-info-content .comment-info-r{margin-left:2rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1}
+        .comment-info .comment-info-content .comment-info-r .comment-star-list>li{margin-top:.6rem;line-height:0;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-align:center;-ms-flex-align:center;align-items:center}
+        .comment-info .comment-info-content .comment-info-r .comment-star-list>li:first-child{margin-top: 0}
+        .comment-info .comment-info-content .comment-info-r .comment-star-list .comment-star{position:relative;width:2.875rem;height:.4375rem}
+        .comment-info .comment-info-content .comment-info-r .comment-star-list .comment-star>img{display:block;width:100%;height:100%}
+        .comment-info .comment-info-content .comment-info-r .comment-star-list .comment-star>div{position:absolute;left:0;top:0;height:100%;background:#fff}
+        .comment-info .comment-info-content .comment-info-r .comment-star-list .comment-progress{position:relative;margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;height:.125rem;background:#e9e9ec;border-radius:.125rem}
+        .comment-info .comment-info-content .comment-info-r .comment-star-list .comment-progress>div{position:absolute;left:0;width:0;height:.125rem;background:#4a4a4e;border-radius:.125rem;width:90%}
+        .app-info{border-top:1px solid #eee;padding:1.25rem 1.45rem;}
+        .app-info .app-title{margin-bottom:.5rem;font-size:1.25rem}
+        .app-info .app-info-con{position:relative;font-size:.875rem}
+        .information-info{border-top:1px solid #eee;padding:1.25rem 1.45rem 0;}
+        .information-info .app-title{margin-bottom:.5rem;font-size:1.25rem}
+        .information-info .information-list>li{font-size:.75rem;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-align:center;-ms-flex-align:center;align-items:center;line-height:3.5;border-bottom:1px solid #f2f2f2}
+        .information-info .information-list>li:last-child{border-bottom: none}
+        .information-info .information-list>li .l{color:#737379}
+        .information-info .information-list>li .r{margin-left:1.5rem;-webkit-box-flex:1;-ms-flex:1;flex:1;text-align:right;line-height:1rem}
+        .android-install{position: fixed;box-sizing:border-box;bottom: 0;background-color: #fff;border-top: 1px solid #ccc;padding:10px 30px;width: 100%;}
+        .android-install__btn{position:relative;background-color: #0c85da;overflow:hidden;color: #fff;padding: 10px;width: 100%;display: block;text-align: center;border-radius: 30px;}
+        .android-install__btn .text{position: relative;z-index: 2;}
+        .android-install__btn.active{background-color: #ccc;}
+        .android-install__btn.active .progress{text-align: center;display: block;position: absolute;background-color: #0c85da;height: 100%;left: 0;top: 0;}
+        .android-install__btn.disabled{background-color: #ccc;color: #fff}
+        .no_safar {width: 100%;height: 100%;z-index: 600;}
+        .no_safar .tip_img {z-index: 500;position: fixed;left: 1.2rem; top: .1rem;}
+        .no_safar .tip_img img {width: 21rem;}
+        .no_safar .model {position: fixed;left: 0;top: 0;width: 100%;height: 100%;background-color: #000000;opacity: 0.7;filter: alpha(opacity=70);z-index: 499;}
+        .pc-platform{text-align: center;padding:20px 30px;}
+        .pc-platform .pc-platform__logo{margin-bottom: 30px;}
+        .pc-platform .pc-platform__code{}
+        .pc-platform .pc-platform__code .code-title{font-weight: bold}

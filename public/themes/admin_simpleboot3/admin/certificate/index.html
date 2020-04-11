@@ -1,0 +1,121 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a>证书列表</a></li>
+        <li><a href="{:url('certificate/add_certificate')}">添加证书</a></li>
+    </ul>
+
+ <form class="well form-inline margin-top-20" method="post" action="{:url('certificate/index')}">
+           备注:
+        <input type="text" class="form-control" name="mark" style="width: 222px;" value="{:input('request.mark/s','')}"
+               placeholder="请输备注">
+        &nbsp;&nbsp;&nbsp;状态:
+        <select  class="form-control" name="status" id="">
+            <option value="0" selected = "selected">全部</option>
+            <option value="2" <if condition="input('request.status/s','') eq 2">selected = "selected"</if>>未启用</option>
+            <option value="1" <if condition="input('request.status/s','') eq 1">selected = "selected"</if>>启用</option>
+            <option value="401" <if condition="input('request.status/s','') eq 401">selected = "selected"</if>>被封号</option>
+            <option value="403" <if condition="input('request.status/s','') eq 403">selected = "selected"</if>>权限问题</option>
+        </select>
+        <input type="submit" class="btn btn-primary" value="搜索"/>
+        <a class="btn btn-danger" href="{:url('download/index')}">清空</a>
+        <a class="btn btn-danger js-ajax-dialog-btn"  href="{:url('certificate/all_del')}">被封用户一键删除</a>
+    </form>
+    
+    <table class="table table-hover table-bordered margin-top-20">
+        <thead>   
+            <tr>
+                <th width="50" style="text-align: center">ID</th>
+                <th style="text-align: center">证书作者</th>
+                <th style="text-align: center">Iss</th>
+                <th style="text-align: center">Kid</th>
+                <th style="text-align: center">Tid</th>
+                <th style="text-align: center">P12密码</th>
+                <th style="text-align: center">剩余数量</th>
+                <th style="text-align: center">已添数量</th>
+                <th style="text-align: center">状态</th>
+                <th class="xxx" style="text-align: center;">备注</th>
+                <th style="text-align: center">创建时间</th>
+                <th width="300" style="text-align: center">{:lang('ACTIONS')}</th>
+            </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="vo">
+            <if condition="$vo['limit_count'] eq 0">
+        		<tr class="over">
+        	<else/>
+        		<tr class="">
+        	</if>
+                <td align="center">{$vo.id}</td>
+                <td align="center">{$vo.user_id}</td>
+                <td align="center">{$vo.iss}</td>
+                <td align="center">{$vo.kid}</td>
+                <td align="center">{$vo.tid}</td>
+                <td align="center">{$vo.p12_pwd}</td>
+                <if condition="$vo['limit_count'] gt 0">
+                	<td style="color:#0d56ff;font-weight:bold;" align="center">{$vo.limit_count}</td>
+                <else/>
+        			 <td align="center">{$vo.limit_count}</td>
+        		</if>
+                <td align="center">{$vo.total_count}</td>
+                <td align="center">
+                    <if condition="$vo['status'] eq 1">
+                        <font class="label label-success">启用</font>
+                     <elseif condition="$vo['status'] eq 0"/>
+                        <font class="label label-warning">未启用</font>
+                     <elseif condition="$vo['status'] eq 401"/>
+                         <font class="label label-danger">被封号</font>
+                     <elseif condition="$vo['status'] eq 403"/>
+                         <font class="label label-danger">权限问题</font>
+                    </if>
+                </td>
+                <td align="center" class="xxx">{$vo.mark}</td>
+                <td align="center">{:date('Y-m-d H:i:s',$vo['create_time'])}</td>
+                <td class="link" align="center">                 
+					<a class="btn btn-xs btn-primary" href='javascript:void(0)' onclick="getUdid({$vo["id"]})">查看</a>
+			
+                    <a class="btn btn-xs btn-primary" href='{:url("certificate/edit_certificate",array("id"=>$vo["id"]))}'>{:lang('EDIT')}</a>
+                    
+                    <if condition="$vo['status'] eq 0">
+                        <a class="btn btn-xs btn-primary js-ajax-dialog-btn" href='{:url("certificate/certificate_status",array("id"=>$vo["id"]))}'>启用</a>
+                    <else/>
+                        <a class="btn btn-xs btn-danger js-ajax-dialog-btn" href='{:url("certificate/certificate_status",array("id"=>$vo["id"]))}'>禁用</a>
+                    </if> 
+           
+                    <a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('certificate/certificate_del',array('id'=>$vo['id']))}">{:lang('DELETE')}</a>
+                    
+                    <a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('certificate/user_del',array('id'=>$vo['id']))}">用户</a>
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+
+    <div class="pagination">{$page}</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script src="__STATIC__/js/admin.js"></script>
+<style>
+	.link a{border-right:1px solid #dcdcdc;padding-right:10px;margin-right:10px;}
+	.link a:last-child{border-right:none}
+	.over{background-color:#dcdcdc;}
+	.xxx{width:50px !important;}
+</style>
+<script>
+	function getUdid(cid){
+		layer.open({
+		  type: 2,
+		  area: ['450px', '450px'],
+		  fixed: false, //不固定
+		  maxmin: true,
+		  title:'UDID',
+		  shade: 0,
+		  content: "{:url('admin/certificate/udid')}?cid="+cid
+		});
+	}
+</script>
+
+</body>
+</html>

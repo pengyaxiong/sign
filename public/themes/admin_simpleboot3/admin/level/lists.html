@@ -1,0 +1,90 @@
+<include file="public@header" />
+</head>
+	<body>
+		<div class="wrap js-check-wrap">
+			<ul class="nav nav-tabs">
+				<li class="active"><a>用户列表</a></li>
+			</ul>
+			<table class="table table-hover table-bordered" style="margin-bottom: 0;">
+				<thead>
+					<tr>
+						<th style="text-align: center;"><input class="checkAll" data-temp="0" onclick="checkAll()" type="checkbox"></th>
+						<th style="text-align: center;">ID</th>
+						<th style="text-align: center;">账号</th>
+						<th style="text-align: center;">用户名</th>
+						<th width="130" style="text-align: center;">{:lang('ACTIONS')}</th>
+					</tr>
+				</thead>
+				<tbody>
+						<foreach name="list" item="vo">
+							<tr>
+								<td align="center">
+									<input  type="checkbox" name="uid" value="{$vo.id}">
+								</td>
+								<td align="center">
+									{$vo.id}
+								</td>
+								<td align="center">
+									<?= $vo['user_login']?$vo['user_login']:$vo['mobile'] ?>
+								</td>
+								<td align="center">
+									<if ($vo.user_nickname)>
+										{$vo.user_nickname}
+									<elseif ($vo.user_login)/>
+										{$vo.user_login}
+									<else />
+										{$vo.mobile}
+									</if>
+								</td>
+								<td align="center">
+									<a class="btn btn-xs btn-primary" href="#" onclick="addPid({$pid},{$vo.id})" class="">设为下级</a>
+								</td>
+							</tr>
+						</foreach>
+				</tbody>
+			</table>
+			<input type="button"  class="btn btn_check btn-primary" value="设为下级">
+			<div class="pagination">{$page}</div>
+			
+		</div>
+	</body>
+	<script>
+		function addPid(pid,uid){
+			$.get("{:url('admin/level/addPid')}?pid="+pid+"&uid="+uid,function(res){
+				if(res.code == 200){
+					layer.msg(res.msg,{'icon':6});
+					window.location.reload();//刷新本业数据
+				}else{
+					layer.msg(res.msg,{'icon':5});
+				}
+			});
+		}
+		
+		function checkAll(){
+			isCheck = $('.checkAll').is(':checked');
+			$('input[name="uid"]').prop("checked",isCheck);  
+		}
+		$('.btn_check').click(function(){
+			num = $("input[name='uid']:checked").length;
+			if(num==0){
+				layer.msg('请先选中要设为下级的人员',{'icon':5});
+				return false;
+			}
+			var str="";
+			$("input[name='uid']:checked").each(function (index, item) {
+			        
+			        if ($("input[name='uid']:checked").length-1==index) {
+			            str += $(this).val();
+			        } else {
+			            str += $(this).val() + ",";
+			        }  
+			    });
+			addPid("{$pid}",str);
+		});
+		
+		function toAdd(pid){
+			window.parent.toAdd(pid);
+			layer.close();
+		}
+	</script>
+</html>

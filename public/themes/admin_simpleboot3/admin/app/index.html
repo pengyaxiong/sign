@@ -1,0 +1,146 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:void(0)">应用列表</a></li>
+        <li><a href="{:url('app/add_index')}">安装记录</a></li>
+        <li><a href="{:url('app/download_index')}">下载记录</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20" method="post" action="{:url('App/index')}">
+        应用名字:
+        <input type="text" class="form-control" name="name" style="width: 222px;" value="{:input('request.name/s','')}" placeholder="请输入应用名称">
+        &nbsp;&nbsp;&nbsp;应用包名:
+        <input type="text" class="form-control" name="bundle" style="width: 222px;" value="{:input('request.bundle/s','')}" placeholder="请输入应用包名">
+		 &nbsp;&nbsp;&nbsp;用户ID:
+		<input type="text" class="form-control" name="uid" style="width: 222px;" value="{:input('request.uid/s','')}" placeholder="请输入用户ID">
+        <input type="submit" class="btn btn-primary" value="搜索"/>
+        <a class="btn btn-danger" href="{:url('App/index')}">清空</a>
+    </form>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th width="50" style="text-align: center">ID</th>
+            <th style="text-align: center">图标</th>
+            <th style="text-align: center">应用名字</th>
+            <th style="text-align: center">ios安装量</th>
+            <th style="text-align: center">安卓下载量</th>
+            <th style="text-align: center">应用版本</th>
+            <th style="text-align: center">应用大小</th>
+            <th>应用包名</th>
+            <th>发布人</th>
+            <th style="text-align: center">发布时间</th>
+            <th style="text-align: center">状态</th>
+            <th width="280" style="text-align: center">{:lang('ACTIONS')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="app" item="vo">
+            <tr>
+                <td align="center">{$vo.id}</td>
+                <td align="center"><img width="30" src="{$vo.img}"></td>
+                <td align="center"><a href="https://{$_SERVER['SERVER_NAME']}/{$vo.er_logo}" style="text-decoration: none;" target="view_window">{$vo.name}</a></td>
+                <th style="text-align: center">{$vo.udid_count}</th>
+                <th style="text-align: center">{$vo.andriod}</th>
+                <td align="center">{$vo.version}</td>
+                <td align="center">{$vo.big|default='0'}M</td>
+                <td>{$vo.bundle}</td>
+                <td><span id="user_info_{$vo.id}" onmouseover="user_info({$vo.uid},{$vo.id})">{$vo.user_nickname}</span></td>
+                <td align="center">{:date('Y-m-d H:i:s',$vo['addtime'])}</td>
+                <td align="center">
+                    <if condition="$vo['status'] eq 1">
+                        <font class="label label-success">正常</font>
+                    <elseif condition="$vo['status'] eq 2"/>
+                        <font class="label label-warning">审核中</font>
+                    <elseif condition="$vo['status'] eq 3"/>
+                        <font class="label label-danger">已删除</font>
+                    <elseif condition="$vo['status'] eq 4"/>
+                        <font class="label label-danger">官方删除</font>
+                    </if>
+                </td>
+                <td align="center">
+					<a class="btn btn-xs btn-primary" href='javascript:void(0)' onclick="getUdid({$vo["id"]},'{$vo['name']}')">查看UDID</a>
+                    <a class="btn btn-xs btn-primary" href='{:url("app/edit",array("id"=>$vo["id"]))}'>{:lang('EDIT')}</a>
+                    <!--<a class="btn btn-xs btn-primary" href='javascript:void(0)' onclick="getAdd({$vo["id"]},'{$vo['name']}')">安装</a>-->
+                    <!--<a class="btn btn-xs btn-primary" href='javascript:void(0)' onclick="getDownland({$vo["id"]},'{$vo['name']}')">下载</a>-->
+                     <if condition="$vo['rate'] eq 1">
+                        <a class="btn btn-xs btn-danger js-ajax-dialog-btn" href='{:url("app/rate",array("id"=>$vo["id"],"rate"=>0))}'  data-msg="确定取消扣量吗？">扣量</a>
+                        <else>
+                        <a class="btn btn-xs btn-warning js-ajax-dialog-btn" href='{:url("app/rate",array("id"=>$vo["id"],"rate"=>1))}' data-msg="确定开启扣量吗？">正常</a>
+                    </if>
+                    <if condition="$vo['status'] eq 1">
+                            <a class="btn btn-xs btn-danger js-ajax-dialog-btn" href='{:url("app/delete",array("id"=>$vo["id"]))}'>禁用</a>
+                        <elseif condition="$vo['status'] eq 4"/>
+                            <a class="btn btn-xs btn-warning js-ajax-dialog-btn" href='{:url("app/edit_app_status",array("id"=>$vo["id"],"status"=>1))}'>启用</a>
+                        <elseif condition="$vo['status'] eq 3">
+                            <a class="btn btn-xs btn-warning disabled">启用</a>
+                        </else>
+                    </if>
+                    <a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('app/delete_file',array('id'=>$vo['id']))}">{:lang('DELETE')}</a>
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    <div class="pagination">{$page}</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript">
+	function user_info(uid,id){
+		$.get("{:url('admin/app/get_user_info')}?uid="+uid+'&id='+id,function(res){
+            var source="-";
+            if (res.data.domain) {
+                source=res.data.domain;
+            }
+			var title = '手机号：'+res.data.mobile+'<br/>剩余下载：'+res.data.sup_down_public+'<br/>来源：' + source;
+			layer.tips(title, '#user_info_'+res.data.tid);
+		});
+	}
+    function clickCopyUrl(id) {
+        new ClipboardJS('.bogo-copy-url' + id);
+    }
+
+    $('.select-type').val({:input('request.type/s','')});
+	
+	function getUdid(appid,name){
+		layer.open({
+		  type: 2,
+		  area: ['450px', '450px'],
+		  fixed: false, //不固定
+		  maxmin: true,
+		  title:name+'-UDID',
+		  shade: 0,
+		  content: "{:url('admin/app/udid')}?appId="+appid
+		});
+		return false;
+	}
+	
+	 function getAdd(appid,name){
+        layer.open({
+            type: 2,
+             area: ['80%', '80%'],
+            fixed: false, //不固定
+            maxmin: true,
+            title:name,
+            shade: 0,
+            content: "{:url('admin/app/add')}?appId="+appid+"&page=1"
+        });
+        return false;
+    }
+    
+     function getDownland(appid,name){
+        layer.open({
+            type: 2,
+             area: ['80%', '80%'],
+            fixed: false, //不固定
+            maxmin: true,
+            title:name,
+            shade: 0,
+            content: "{:url('admin/app/download')}?appId="+appid+"&page=1"
+        });
+        return false;
+    }
+</script>
+</body>
+</html>

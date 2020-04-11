@@ -1,0 +1,39 @@
+<include file="public@header" />
+</head>
+<body>
+    <div class="wrap">
+        <ul class="nav nav-tabs">
+            <li class="tabs_li tabs_index"><a href="{:url('user/adminIndex/index')}">{:lang('USER_INDEXADMIN_INDEX')}</a></li>
+            <li class="tabs_li tabs_add active"><a href="javascript:void(0)">添加用户</a></li>
+        </ul>
+        <form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('AdminIndex/addPost')}">
+            <div class="form-group">
+                <label for="input-user_pass" class="col-sm-2 control-label"><span class="form-required">*</span>手机号</label>
+                <div class="col-md-6 col-sm-10">
+                    <input type="text" class="form-control" id="input-user_mobile" name="user_mobile" value="" placeholder="请输入手机号">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="input-user_pass" class="col-sm-2 control-label"><span class="form-required">*</span>密码</label>
+                <div class="col-md-6 col-sm-10">
+                    <input type="text" class="form-control" id="input-user_pass" name="user_password" value="" placeholder="请输入密码">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="input-more" class="col-sm-2 control-label">备注</label>
+                <div class="col-md-6 col-sm-10">
+                     <textarea rows="5" class="form-control" id="more" name="more" placeholder="备注信息"></textarea>
+                </div>
+            </div>     
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input type="hidden" name="id" value="">
+                    <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+                    <a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

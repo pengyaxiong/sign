@@ -1,0 +1,51 @@
+<include file="public@header" />
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('certificate/index')}">证书列表</a></li>
+        <li class="active"><a>添加证书</a></li>
+    </ul>
+    <form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('certificate/save_certificate')}" enctype="multipart/form-data">
+        <input type="hidden" value="{$certificate.id|default=''}">
+
+        <div class="form-group">
+            <label for="input-Iss" class="col-sm-2 control-label"><span class="form-required">*</span>Iss ID</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="iss" id="iss" placeholder="请输入Iss" value="{$certificate.iss|default=''}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input-Kid" class="col-sm-2 control-label"><span class="form-required">*</span>Key ID</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="kid" id="kid" placeholder="请输入Kid" value="{$certificate.kid|default=''}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input-Kid" class="col-sm-2 control-label"><span class="form-required">*</span>P8文件</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="file" id="p8_file" name="p8_file">
+                <p class="help-block">请上传P8文件</p>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="input-Mark" class="col-sm-2 control-label">备注</label>
+            <div class="col-md-6 col-sm-10">
+                <textarea rows="5" class="form-control" id="mark" name="mark" placeholder="备注信息，可填写开发者账号">{$certificate.mark|default=''}</textarea>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+                <a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

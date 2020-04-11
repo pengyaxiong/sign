@@ -1,0 +1,98 @@
+<include file="public@head"/>
+
+<style>
+    .sq-set{display: flex}
+    .sq-set-item{transition: 0.3s all ease-in;flex: 1;background-color: #fff;margin-left:-1px;border:1px dotted #ececec;display: flex;flex-direction: column;align-items: center;justify-content: center;margin-bottom: 10px;padding: 40px 0}
+    .sq-set-item.disabled{cursor: not-allowed;background-color: #fafafa;}
+    .sq-set-item:hover{background-color: #fafafa;}
+    .sq-set-item .layui-icon{font-size: 36px;color: #999;}
+    .sq-set-item__text{text-align: center;margin-top: 20px;}
+    .sq-set-item__text h5{font-size: 18px;margin-bottom: 8px;}
+    .sq-set-item__text p{color: #999}
+</style>
+
+<body class="body-all">
+    <div class="templatemo-content">'
+        <!--  我的应用左侧 -->
+        <include file="public@tube"/>
+        <!--  我的应用左侧 -->
+
+        <!--  修改资料-->
+        <div class="templatemo-body">
+            <div class="sq-set">
+                <a class="sq-set-item" href="{:cmf_url('user/Profile/edit')}">
+                    <i class="layui-icon layui-icon-set"></i>
+                    <div class="sq-set-item__text">
+                        <h5>基本资料</h5>
+                        <p>查看和修改账户的基本资料</p>
+                    </div>
+                </a>
+                <a class="sq-set-item" href="{:cmf_url('user/Profile/password')}">
+                    <i class="layui-icon layui-icon-set"></i>
+                    <div class="sq-set-item__text">
+                        <h5>修改密码</h5>
+                        <p>修改当前账户的登录密码</p>
+                    </div>
+                </a>
+                <a class="sq-set-item" href="{:cmf_url('user/Profile/financialInfo')}">
+                    <i class="layui-icon layui-icon-set"></i>
+                    <div class="sq-set-item__text">
+                        <h5>财务信息</h5>
+                        <p>查看消费记录和充值记录</p>
+                    </div>
+                </a>
+            </div>
+            <div class="sq-set">
+                <a class="sq-set-item" href="{:url('Profile/warning')}">
+                    <i class="layui-icon layui-icon-set"></i>
+                    <div class="sq-set-item__text">
+                        <h5>账户预警设置</h5>
+                        <p>设置剩余设备数还剩多少发送短信提醒</p>
+                    </div>
+                </a>
+             
+                <a class="sq-set-item disabled">
+                    <i class="layui-icon layui-icon-set"></i>
+                    <div class="sq-set-item__text">
+                        <h5>反作弊设置</h5>
+                        <p>可在每个APP应用下面进行设置</p>
+                    </div>
+                </a>
+                 <a class="sq-set-item disabled">
+                    <i class="layui-icon layui-icon-set"></i>
+                    <div class="sq-set-item__text">
+                        <h5>发票管理</h5>
+                        <p>暂未开通</p>
+                    </div>
+                </a>
+            </div>
+            <div class="sq-set">
+               
+                <a class="sq-set-item disabled">
+                    <i class="layui-icon layui-icon-set"></i>
+                    <div class="sq-set-item__text">
+                        <h5>方案设计</h5>
+                        <p>暂未开通</p>
+                    </div>
+                </a>
+                <a class="sq-set-item disabled">
+                    <i class="layui-icon layui-icon-set"></i>
+                    <div class="sq-set-item__text">
+                        <h5>日报提醒</h5>
+                        <p>暂未开通</p>
+                    </div>
+                </a>
+                <a class="sq-set-item disabled">
+                    <i class="layui-icon layui-icon-set"></i>
+                    <div class="sq-set-item__text">
+                        <h5>更多功能</h5>
+                        <p>暂未开通</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <!--  修改资料-->
+    </div>
+</body>
+
+<include file="public@footer"/>

@@ -1,0 +1,78 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="javascript:;">消费记录</a></li>
+		</ul>
+		<form class="well form-inline margin-top-20" method="post" action="{:url('members/consume')}?page=1">
+			会员id:
+			<input type="text" class="form-control" name="uid" style="width: 200px;" value="{$params['uid']|default=''}"
+			 placeholder="请输入会员id...">
+			&nbsp;&nbsp;
+			类型:
+			<select class="form-control" name="is_add" style="width: 140px;">
+				<option value='-1'>全部</option>
+				<option value='1' <if condition="isset($params['is_add']) && $params['is_add'] eq '1'">selected="selected"</if>>充值</option>
+				<option value='0' <if condition="isset($params['is_add']) && $params['is_add'] === '0'">selected="selected"</if>>扣减</option>
+			</select> &nbsp;&nbsp;
+			分类:
+			<select class="form-control" name="addtype" style="width: 140px;">
+				<option value='-1'>全部</option>
+				<option value='0' <if condition="isset($params['addtype']) && $params['addtype'] === '0'">selected="selected"</if>>手动</option>
+				<option value='1' <if condition="isset($params['addtype']) && $params['addtype'] eq '1'">selected="selected"</if>>自动</option>
+				<option value='2' <if condition="isset($params['addtype']) && $params['addtype'] eq '2'">selected="selected"</if>>上线</option>
+			</select> &nbsp;&nbsp;
+			时间:
+			<input type="text" class="form-control js-bootstrap-datetime" name="start_time" value="{$params['start_time']|default=''}"
+			 style="width: 140px;" autocomplete="off">-
+			<input type="text" class="form-control js-bootstrap-datetime" name="end_time" value="{$params['end_time']|default=''}"
+			 style="width: 140px;" autocomplete="off"> &nbsp; &nbsp;
+			<input type="submit" class="btn btn-primary" value="搜索" />
+		</form>
+		<form class="js-ajax-form" action="" method="post">
+			<table class="table table-hover table-bordered table-list">
+				<thead>
+					<tr>
+						<th width="50">ID</th>
+						<th>会员名称(id)</th>
+						<th>上线名称(id)</th>
+						<th>次数</th>
+						<th>设备类型</th>
+						<th>操作来源</th>
+						<th>操作状态</th>
+						<th>操作时间</th>
+						<th>备注</th>
+					</tr>
+				</thead>
+				<tbody>
+					<foreach name="charge_log" item="vo">
+						<tr>
+						<td><b>{$vo.id}</b></td>
+						<td>{$vo.u_name}({$vo.uid})</td>
+						<td>{$vo.p_name}({$vo.puid})</td>
+						<td>{$vo.num}</td>
+						<th>{$vo.type==1?'公有':'私有'}</th>
+						<th>
+							<switch name="$vo['addtype']" >
+							    <case value="0">手动</case>
+							    <case value="1">自动</case>
+							    <case value="2">上线</case>
+							    <default />''
+							</switch>
+						</th>
+						<td>{$vo.is_add?'充值':'扣减'}</td>
+						<td>{:date('Y-m-d',$vo.addtime)}</td>
+						<td>{$vo.msg}</td>
+						</tr>
+					</foreach>
+				</tbody>
+			</table>
+
+			 <ul class="pagination">{$page|default=''}</ul>
+		</form>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+
+</body>
+</html>

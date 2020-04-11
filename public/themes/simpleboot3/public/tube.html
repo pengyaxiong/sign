@@ -1,0 +1,35 @@
+<!--  我的应用左侧 -->
+<div class="templatemo-sidebar">
+    <div class="sq-logo">
+        <a href="/"><img src="__TMPL__/public/static/image/aaa.png"></a>
+    </div>
+    <div class="templatemo-sidebar-nav">
+        <ul>
+            <li>
+                <a class="{$nav=='tube' ? 'active' : ''}" href="{:cmf_url('user/tube/index')}">数据统计</a>
+            </li>
+            <li>
+                <a class="{$nav=='user' ? 'active' : ''}" href="/user/profile/center">账户设置</a>
+            </li>
+             <if condition="$is_dl == 1">
+				<li>
+				    <a class="{$nav=='level' ? 'active' : ''}" href="{:url('user/level/index')}">我的下级</a>
+				</li>
+			</if>
+            <li>
+                <a class="" href="{:url('user/install/ud_id')}" target="_blank">UDID工具</a>
+            </li>
+        </ul>
+    </div>
+    <span href="javascript:void(0);" class="j-upload-app__btn sq-btn">
+        发布应用
+    </span>
+	<span href="javascript:void(0);" class="sq-btn j-pay-btn" style="background:#FF5722">
+        购买设备
+    </span>
+    <div class="" style="text-align: center;margin-top: 10px;">
+        在线客服：
+        <a target="_blank" href="tencent://message/?uin={$site_info['site_admin_qq']|default=''}&amp;Site=qq&amp;Menu=yes" style="color:#348ef1 ">在线客服</a>
+    </div>   
+</div>
+

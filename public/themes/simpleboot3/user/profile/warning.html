@@ -1,0 +1,77 @@
+<include file="public@head"/>
+<style>
+    .sq-form{border-radius:5px;background-color: #fff;padding:30px;box-shadow: 3px 3px 3px #ececec;border: 1px solid #ececec;}
+    .sq-form-item{display: flex;align-items: center;margin-bottom: 20px;}
+    .sq-form-item .item-label{width: 130px;color: #999}
+    .sq-form-item .item-input{width: 300px;height: 38px;line-height: 38px;}
+	.layui-form-checked[lay-skin=primary] i {border-color: #2d8cf0;background-color: #2d8cf0;color: #fff;}
+	.layui-form-checkbox[lay-skin=primary]:hover i {border-color: #2d8cf0;color: #fff;}
+	.sq-form label{margin-top:20px;margin-bottom:20px;display: block;color:#9E9E9C;}
+	#warning_form{margin-top:20px}
+</style>
+<body>
+    <div class="templatemo-content">'
+        <!--  我的应用左侧 -->
+        <include file="public@tube"/>
+        <!--  我的应用左侧 -->
+
+        <!--  修改资料-->
+        <div class="templatemo-body">
+            <h5>设置预警值</h5>
+			<form class="layui-form" action="">
+				
+				<div class="sq-form">
+					<input type="checkbox" name="like1[write]" lay-filter="encrypt" lay-skin="primary" title="账户余额提醒" >
+					<label>填写手机号码后，即可通过手机号收到账户余额的预警</label>
+					<div hidden id="warning_form">
+						<div class="sq-form-item">
+						    <div class="item-label">手机号：</div>
+						    <div class="item-input">
+						        <input name="mobile" type="text" disabled value="{:get_user('mobile')}" class="layui-input">
+						    </div>
+						</div>
+						    <div class="sq-form-item">
+						        <div class="item-label">预警值：</div>
+						        <div class="item-input">
+						            <input name="num" type="text" id="num" value="{$num}" class="layui-input">
+						        </div>
+						    </div>
+						    <div class="sq-form-item">
+						        <div class="item-label"></div>
+						        <button class="layui-btn layui-btn-normal" id="warning">保存</button>
+						    </div>
+					</div>
+					<input type="checkbox" name="like1[write]"  lay-skin="primary"  disabled title="接收每日应用日报(开发中)" >
+					<label>填写邮箱后，即可通过这些邮箱收到每日关于您账户的财务信息，和您选择应用的日报等。多个邮箱请用分号隔开输入</label>
+					<input type="checkbox" name="like1[write]"lay-skin="primary" disabled title="反作弊手机短信(开发中)" >
+					<label>填写手机号码后，即可通过手机号收到触发反作弊时的预警和下架提醒；需要多个手机时，请用分号隔开，最多添加5个手机号；</label>
+				</div>
+			</form>
+
+            
+        </div>
+    </div>
+	<script>
+		layui.form.render();
+		layui.form.on('checkbox(encrypt)',function(obj){
+			if(obj.elem.checked){
+				$('#warning_form').show();
+			}else{
+				$('#warning_form').hide();
+			}
+			
+		});
+		
+		$('#warning').click(function(){
+			num = $('#num').val();
+			$.post('{:url("Profile/warning")}',{num:num},function(res){
+				if(res.code==200){
+					layer.msg(res.msg,{icon:6});
+				}else{
+					layer.msg('修改失败',{icon:5});
+				}
+			});
+		});
+	</script>
+</body>
+<include file="public@footer"/>

@@ -1,0 +1,48 @@
+<include file="public@header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a class="active">下载记录</a></li>
+    </ul>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th width="50" style="text-align: center;">设备</th>
+            <th style="text-align: center;">系统版本</th>
+            <th style="text-align: center;">APP版本</th>
+            <th style="text-align: center;">下载IP</th>
+            <th style="text-align: center;">下载时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="d_list" item="vo">
+            <if condition="$vo.id">
+                <tr>
+                    <td align="center">
+                        {$vo.device}
+                    </td>
+                    <td align="center">
+                        {$vo.ios_version}
+                    </td>
+                    <td align="center">
+                        {$vo.version}
+                    </td>
+                    <td align="center">
+                        {$vo.ip}
+                    </td>
+                    <td align="center">
+                        {$vo.addtime}
+                    </td>
+                </tr>
+            </if>
+        </foreach>
+        </tbody>
+    </table>
+    <div class="pagination">{$d_page}</div>
+</div>
+</body>
+<script>
+
+</script>
+</html>

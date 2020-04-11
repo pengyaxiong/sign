@@ -1,0 +1,57 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('certificate/index')}">证书列表</a></li>
+        <li class="active"><a>编辑证书</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-form margin-top-20" action="{:url('certificate/edit_certificate_post')}" method="post"
+          enctype="multipart/form-data">
+        <input name="id" type="hidden" value="{$certificate.id|default=''}">
+        <input name="user_id" type="hidden" value="{$certificate.user_id|default=''}">
+        <div class="form-group">
+            <label for="input-Iss" class="col-sm-2 control-label"><span class="form-required">*</span>Iss ID</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="iss" id="iss" placeholder="请输入Iss" value="{$certificate.iss|default=''}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input-Kid" class="col-sm-2 control-label"><span class="form-required">*</span>Key ID</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="kid" id="kid" placeholder="请输入Kid"
+                   value="{$certificate.kid|default=''}">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="input-Tid" class="col-sm-2 control-label"><span class="form-required">*</span>Tid</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="tid" id="tid" placeholder="请输入与Tid"
+                   value="{$certificate.tid|default=''}">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="input-Mark" class="col-sm-2 control-label">备注</label>
+            <div class="col-md-6 col-sm-10">
+                <textarea rows="5" class="form-control" id="mark" name="mark" placeholder="备注信息，可填写开发者账号">{$certificate.mark|default=''}</textarea>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary js-ajax-submit">保存</button>
+                <a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript">
+    $('.selectuser').val({$certificate.user_id});
+</script>
+</body>
+</html>

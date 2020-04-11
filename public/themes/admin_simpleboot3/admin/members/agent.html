@@ -1,0 +1,78 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="javascript:;">代理管理</a></li>
+		</ul>
+		<form class="well form-inline margin-top-20" method="post" action="{:url('members/agent')}">
+			分类:
+			<select class="form-control" name="is_true" style="width: 140px;">
+				<option value='-1'>全部</option>
+				<option value='0' <if condition="$is_true eq '0'">selected="selected"</if>>待审核</option>
+				<option value='1' <if condition="$is_true eq '1'">selected="selected"</if>>审核通过</option>
+			</select> &nbsp;&nbsp;
+			<input type="submit" class="btn btn-primary" value="搜索" />
+		</form>
+		
+			<table class="table table-hover table-bordered table-list">
+				<thead>
+					<tr>
+						<th width="50">ID</th>
+						<th>网站域名</th>
+						<th>网站名</th>
+						<th>QQ</th>
+						<th>微信</th>
+						<th>用户名</th>
+						<th>状态</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<foreach name="agent" item="vo">
+					<tr>
+						<td><b>{$vo.id}</b></td>
+						<td>{$vo.domain}</td>
+						<td>{$vo.title}</td>
+						<td>{$vo.qq}</td>
+						<td>{$vo.wechat}</td>
+						<td>{$vo.mobile}(id:{$vo.uid})</td>
+						<td>
+							<if ($vo['is_true'])>
+								审核通过
+								<else />
+								待审核
+							</if>
+						</td>
+						<td>
+							<if condition="$vo['is_true'] eq '1'">
+								<a href="javascript:void(0)" onclick="agent({$vo['is_true']},{$vo['uid']})">禁用</a>
+								<else />
+								<a href="javascript:void(0)" onclick="agent({$vo['is_true']},{$vo['uid']})">通过</a>
+							</if>
+						</td>
+
+					</tr>
+				</foreach>
+
+			</table>
+
+			<ul class="pagination">{$page|default=''}</ul>
+		
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+	<script>
+		function agent(is_true,uid){
+			is_true=is_true==1?0:1;
+			$.get("{:url('members/agent_edit')}?is_true="+is_true+'&uid='+uid,function(res){
+				if(res.code==200){
+					layer.msg(res.msg,{icon:6});
+					location.reload();
+				}else{
+					layer.msg(res.msg,{icon:5});
+				}
+			});
+		}
+	</script>
+
+</body>
+</html>

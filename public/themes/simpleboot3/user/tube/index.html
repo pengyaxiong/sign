@@ -1,0 +1,240 @@
+<include file="public@head"/>
+
+<body>
+    <div class="templatemo-content">
+        <!--  我的应用左侧 -->
+        <include file="public@tube"/>
+        <!--  我的应用左侧 -->
+
+        <!--  begin 首页-->
+        <div class="templatemo-body">
+            <!--begin 用户资料-->
+            <div class="sq-user">
+                <h3 class="sq-user__title">账户资料</h3>
+
+                <div class="sq-user__body">
+                    <div class="sq-user__content">
+                        <div class="content-head">
+                            <div class="content-head__info">
+                                <img src="__TMPL__/public/static/image/avatar.png">
+                                <dl>
+                                    <dt>
+                                    	<span>{$user.mobile}</span>
+                                    	<a href="{:url('index/logout')}"  style="color:#ff5722;font-size:14px;">（退出登陆）</a>
+                                    </dt>
+                                    <dd>
+                                        <i class="layui-icon layui-icon-auz" style="color: #2198f0;position:relative;top:1px;"></i>
+                                        普通用户
+                                    </dd>
+                                </dl>
+								
+                            </div>
+                            <div class="content-head__count">
+                                <div style="margin-right: 18px">
+                                    <div class="count-title">剩余装机数</div>
+                                    <dl class="">
+                                        <dt>{$user.sup_down_public}</dt>
+                                        <dd>台</dd>
+                                    </dl>
+                                </div>
+                                <button class="layui-btn layui-btn-normal layui-btn-radius j-pay-btn">
+                                    购买设备
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="content-body" style="text-align: center;">
+                            <dl>
+                                <dt>今日装机数</dt>
+                                <dd>{$todayApp}</dd>
+                            </dl>
+                            <!--<dl>-->
+                            <!--    <dt>今日下载数</dt>-->
+                            <!--    <dd>{$todayDownload}</dd>-->
+                            <!--</dl>-->
+                            <dl>
+                                <dt>全部装机数</dt>
+                                <dd>{$allApp}</dd>
+                            </dl>
+                            <!--<dl>-->
+                            <!--    <dt>全部下载数</dt>-->
+                            <!--    <dd>{$allDownload}</dd>-->
+                            <!--</dl>-->
+                        </div>
+                        
+                    </div>
+               <div class="sq-user__set">
+                        <a href="/user/profile/edit.html" style="margin-bottom: 10px;display: block">
+                            <dl class="">
+                                <dt class="layui-icon layui-icon-set"></dt>
+                                <dd class="">
+                                    <h5>基本信息</h5>
+                                    <p>查看和修改账号信息</p>
+                                </dd>
+                            </dl>
+                        </a>
+
+                        <a href="/user/profile/financialinfo.html">
+                            <dl class="">
+                                <dt class="layui-icon layui-icon-set"></dt>
+                                <dd class="">
+                                    <h5>财务信息</h5>
+                                    <p>查看消费记录和充值记录</p>
+                                </dd>
+                            </dl>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            <!--end   用户资料-->
+
+            <!--begin 应用列表-->
+            <div class="sq-app">
+                <h3 class="sq-app__title">常用应用</h3>
+                <div class="sq-app__table">
+                    <table class="layui-table sq-table">
+                        <thead>
+                            <tr>
+                                <th>应用图标</th>
+                                <th>应用名称</th>
+                                <th>苹果版本</th>
+                         
+                                <th>下载地址</th>
+                                <th>上架状态</th>
+                                <th>装机数量</th>
+                                <!--<th>下载数量</th>-->
+                                <th>创建时间</th>
+                                <th width="150">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <if condition="count($assets) == 0">
+                                <tr class="">
+                                    <td colspan="10">
+                                        <img style="max-width: 300px" src="__TMPL__/public/static/image/abnor_no_data.png?x-oss-process=style/default">
+                                        <p style="font-size: 16px;margin-top: 20px;margin-bottom: 20px">应用列表为空</p>
+                                        <span href="javascript:void(0);" class="j-upload-app__btn sq-btn" style="width: 300px;margin-bottom: 30px;">
+                                            发布应用
+                                        </span>
+                                    </td>
+                                </tr>
+                            <else/>
+                                <foreach name="assets" id="v">
+                                    <tr>
+                                        <td>
+                                        	<a target="_blank" href="{:getsite()}/{$v.er_logo}">
+                                            	<img width="40" height="40" src="{$v.img}" class="sq-app__img">
+                                            </a>
+                                        </td>
+                                        <td>
+                                        	<a target="_blank" href="{:getsite()}/{$v.er_logo}">
+                                        		{$v.name}
+                                        	</a>
+                                        </td>
+                                        <td>{$v.version}</td>
+                                     
+                                        <td class="erweim" date-url="{:getsite()}/{$v.er_logo}">
+                                            <a target="_blank" href="{:getsite()}/{$v.er_logo}" style="color: #0c85da">
+                                                {:getsite()}/{$v.er_logo}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <div class="layui-form">
+                                                <input type="checkbox" data-id="{$v.id}" lay-filter="status" <?=$v['status']==1?'checked':''?> name="status" lay-skin="switch">
+                                            </div>
+                                        </td>
+										<?php $count = get_down_count($v['id']);?>
+                                        <td>{$count['count_udid']}</td>
+                                        <!--<td>{$count['count_down']}</td>-->
+                                        <td>{$v['addtime'] | date="Y-m-d",###}</td>
+                                        <td >
+                                            <a style="padding: 0 15px" href="{:cmf_url('user/tube/sup_details',array('id'=>$v['id']))}" class="layui-btn layui-btn-normal layui-btn-sm">
+                                                修改
+                                            </a>
+                                            <a style="padding: 0 15px" href="javascript:void(0)" onclick="del(this)" data-id="{$v['id']}"  class="layui-btn layui-btn-danger layui-btn-sm">
+                                                删除
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </foreach>
+                            </if>
+                        </tbody>
+                   </table>
+                </div>
+            </div>
+            <!--end   应用列表-->
+
+            <!--begin 数据统计-->
+            <!--<div class="sq-count">-->
+            <!--    <h3 class="sq-count__title">下载统计</h3>-->
+            <!--    <div style="height:460px;background-color: #fff;padding: 10px 0;border: 1px solid #ececec;box-shadow: 3px 3px 3px #ececec">-->
+            <!--        <div id="chart"></div>-->
+            <!--    </div>-->
+            <!--</div>-->
+            <!--begin 数据统计-->
+        </div>
+        <!--  end   首页-->
+    </div>
+</body>
+
+<include file="public@footer"/>
+<script src="https://unpkg.com/frappe-charts@1.0.0/dist/frappe-charts.min.iife.js"></script>
+
+<script type="text/javascript">
+    function del(obj){
+        layer.open({
+            title   : '删除提示',
+            content : '温馨提示，删除后不可恢复',
+            btn: ['确定','取消'],
+            btn1: function(){
+               $.get("{:cmf_url('user/tube/delApp')}?id="+$(obj).attr('data-id'),function(res){
+                   if(res.code==200){
+                       layer.msg(res.msg,{icon:6});
+                       window.location.reload();
+                   }else{
+                       layer.msg(res.msg,{icon:5});
+                   }
+                   return false;
+               });
+           }
+        });
+    };
+
+    $(function () {
+        layui.use('form', function () {
+            var form = layui.form;
+
+            form.on('switch(status)', function (data) {
+                var id     = data.elem.attributes['data-id'].nodeValue;
+                var status = data.elem.checked?1:0;
+
+                $.get("{:url('tube/sup_status_update')}?id="+id+"&status="+status,function(res){
+                    if(res.code == 200){
+                        layer.msg('修改成功',{icon:6});
+                    }else{
+                        layer.msg('修改失败',{icon:5});
+                    }
+                });
+            });
+            form.render()
+        })
+
+        let chart = new Chart("#chart", {
+            data: {
+                labels: {$week},
+                datasets: [{
+                    "name": "下载数",
+                    "values":{$count_down}
+                },{
+                    "name": "装机数",
+                    "values": {$count_udid}
+                }]
+            },
+            type   : 'line',
+            height : 330,
+            colors : ['#ffa3ef', 'light-blue']
+        });
+    })
+</script>
+

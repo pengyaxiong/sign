@@ -1,0 +1,36 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+
+    <div class="wrap js-check-wrap" style="height:400px">
+        <form class="form-horizontal js-ajax-form" action="{:url('certificate/testInput')}" method="post"
+              enctype="multipart/form-data">
+            <input type="hidden" value="{$certificate.id|default=''}">
+         
+            <div class="form-group">
+                <label>Iss</label>
+                <input type="text" class="form-control" name="iss" id="iss" placeholder="请输入Iss"
+                       value="{$certificate.iss|default=''}">
+            </div>
+            <div class="form-group">
+                <label>Kid</label>
+                <input type="text" class="form-control" name="kid" id="kid" placeholder="请输入Kid"
+                       value="{$certificate.kid|default=''}">
+            </div>
+         
+            <div class="form-group">
+                <label>P8文件上传</label>
+                <input type="file" id="p8_file" name="p8_file">
+                <p class="help-block">请上传P8文件</p>
+            </div>
+            <button type="submit" class="btn btn-default js-ajax-submit">保存</button>
+        </form>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script src="__STATIC__/js/admin.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<include file="public@header" />
+</head>
+	<body>
+		<div class="wrap js-check-wrap">
+			<ul class="nav nav-tabs">
+				<li class="active"><a>下级管理</a></li>
+				<!--<li><a href="#" onclick="toAdd({$pid})">添加下级</a></li>-->
+			</ul>
+			<table class="table table-hover table-bordered">
+				<thead>
+					<tr>
+						<th width="50" style="text-align: center;">ID</th>
+						<th style="text-align: center;">账号</th>
+						<th style="text-align: center;">用户名</th>
+						<th style="text-align: center;">总下载量</th>
+						<th style="text-align: center;">总安装量</th>
+						<th style="text-align: center;">pid</th>
+						<th width="200" style="text-align: center;">{:lang('ACTIONS')}</th>
+					</tr>
+				</thead>
+				<tbody>
+						<foreach name="sid_data" item="vo">
+							<if condition="$vo.id">
+							<tr>
+								<td align="center">
+									{$vo.id}
+								</td>
+								<td align="center">
+									<?= $vo['user_login']?$vo['user_login']:$vo['mobile'] ?>
+								</td>
+								<td align="center">
+									<if ($vo.user_nickname)>
+										{$vo.user_nickname}
+									<elseif ($vo.user_login)/>
+										{$vo.user_login}
+									<else />
+										{$vo.mobile}
+									</if>
+								</td>
+								<td align="center">
+									{$vo.count_udid}
+								</td>
+								<td align="center">
+									{$vo.count_down}
+								</td>
+								<td align="center">
+									{$vo.pid}
+								</td>
+								<td align="center">
+									<a class="btn btn-xs btn-primary" href="#" onclick="downData({$vo.id},<if ($vo.user_nickname)>{$vo.user_nickname}<elseif ($vo.user_login)/>{$vo.user_login}<else />{$vo.mobile}</if>)" class="">详细数据</a>
+									<a class="btn btn-xs btn-primary" href="#" onclick="delPid({$pid},{$vo.id})" class="">取消下级</a>		
+								</td>
+							</tr>
+							</if>
+						</foreach>
+				</tbody>
+			</table>
+			<div class="pagination">{$page}</div>
+		</div>
+	</body>
+	<script>
+		function delPid(pid,uid){
+			layer.confirm('你确定要取消吗？', {
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+			 $.get("{:url('admin/level/delUid')}?pid="+pid+"&uid="+uid,function(res){
+			 	if(res.code == 200){
+			 		layer.msg(res.msg,{'icon':6});
+			 		window.location.reload();//刷新本业数据
+			 	}else{
+			 		layer.msg(res.msg,{'icon':5});
+			 	}
+			 });
+			}, function(){
+			  
+			});
+			
+		}
+		
+		function downData(uid,nickname){
+			window.parent.downData(uid,nickname);
+			// var index = parent.layer.getFrameIndex(window.name);
+			// parent.layer.close(index);
+		}
+		function toAdd(pid){
+			window.parent.toAdd(pid);
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.layer.close(index);
+		}
+	</script>
+</html>

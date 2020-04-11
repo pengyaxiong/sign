@@ -1,0 +1,72 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('app/index')}">应用列表</a></li>
+        <li  class="active"><a href="javascript:void(0)">安装记录</a></li>
+        <li><a href="{:url('app/download_index')}">下载记录</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20" method="post" action="{:url('App/add_index')}">
+        应用名字:
+        <input type="text" class="form-control" name="name" style="width: 222px;" value="{:input('request.name/s','')}" placeholder="请输入应用名称">
+        &nbsp;&nbsp;&nbsp;应用包名:
+        <input type="text" class="form-control" name="bundle" style="width: 222px;" value="{:input('request.bundle/s','')}" placeholder="请输入应用包名">
+        &nbsp;&nbsp;&nbsp;用户ID:
+        <input type="text" class="form-control" name="uid" style="width: 222px;" value="{:input('request.uid/s','')}" placeholder="请输入用户ID">
+        <input type="submit" class="btn btn-primary" value="搜索"/>
+        <a class="btn btn-danger" href="{:url('App/add_index')}">清空</a>
+    </form>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th width="50" style="text-align: center">ID</th>
+            <th style="text-align: center">图标</th>
+            <th style="text-align: center">应用名字</th>
+            <th width="50" style="text-align: center;">UDID</th>
+            <th style="text-align: center;">设备型号</th>
+            <th style="text-align: center;">系统版本</th>
+            <th style="text-align: center;">APP版本</th>
+            <th style="text-align: center;">IP</th>
+            <th style="text-align: center;">装机时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="list" item="vo">
+        
+            <tr>
+                <td align="center">{$vo.app.id}</td>
+                <td align="center"><img width="30" src="{$vo.app.img}"></td>
+                <td align="center"><a href="https://{$_SERVER['SERVER_NAME']}/{$vo.app.er_logo}" style="text-decoration: none;" target="view_window">{$vo.app.name}</a></td>
+                <td align="center">
+                    {$vo.udid}
+                </td>
+                <td align="center">
+                    {$vo.device_name}
+                </td>
+                <td align="center">
+                    {$vo.ios_version}
+                </td>
+                <td align="center">
+                    {$vo.version}
+                </td>
+                <td align="center">
+                    {$vo.ip}
+                </td>
+                <td align="center">
+                    {$vo.create_time}
+                </td>
+            </tr>
+          
+        </foreach>
+        </tbody>
+    </table>
+    <div class="pagination">{$page}</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

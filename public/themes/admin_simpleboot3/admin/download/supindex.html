@@ -1,0 +1,84 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active tabs_index tabs_li"><a href="javascript:;">充值套餐</a></li>
+        <li class="tabs_li tabs_add"><a href="javascript:void(0)" onclick="sup_add()">添加套餐</a></li>
+    </ul>
+
+    <form class="js-ajax-form" action="" method="post" style="margin-top:50px;">
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+                <th width="50" style="text-align: center">ID</th>
+                <th style="text-align: center">类型</th>
+                <th style="text-align: right;">下载次数</th>
+                <th style="text-align: right;">购买金额</th>
+                <th width="180" style="text-align: center">赠送次数(0为不赠送)</th>
+                <th style="text-align: center">顺序</th>
+                <th width="180" style="text-align: center">添加时间</th>
+                <th width="180" style="text-align: center">操作</th>
+            </tr>
+            </thead>
+            <foreach name="download" item="vo">
+                <tr>
+                    <td align="center">{$key+1}</td>
+                    <td align="center">
+                        <if condition="$vo.type eq 1">
+                            公有
+                            <else/>
+                            私有
+                        </if>
+                    </td>
+                    <td align="right">{$vo.num}</td>
+                    <td align="right">{$vo.coin} 元</td>
+                    <td align="center">{$vo.gift}</td>
+                    <td align="center">{$vo.orderno}</td>
+                    <td align="center">{$vo['addtime'] |date="Y-m-d H:i:s",###} </td>
+                    <td align="center">
+                        <a class="btn btn-xs btn-success" href="javascript:void(0)" onclick="sup_edit({$vo['id']})">编 辑</a>
+                        <a class="btn btn-xs btn-danger js-ajax-dialog-btn" data-msg="{:lang('确认删除此套餐吗？')}" href="{:url('download/supdel',array('id'=>$vo['id']))}">删 除</a>
+                    </td>
+                </tr>
+            </foreach>
+
+        </table>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+	function sup_edit(id){
+		
+		layer.open({
+		  type: 2,
+		  area: ['560px', '460px'],
+		  fixed: false, //不固定
+		  maxmin: true,
+		  title:'修改套餐  ID:'+id,
+		  content: "{:url('download/add_sup')}?id="+id,
+		  end:function(){
+			  window.location.reload();
+		  }
+		});
+	}
+	function sup_add(){
+		$('.tabs_li').removeClass('active');
+		$('.tabs_add').addClass('active');
+		layer.open({
+		  type: 2,
+		  area: ['560px', '460px'],
+		  fixed: false, //不固定
+		  maxmin: true,
+		  title:'添加套餐',
+		  content: "{:url('download/add_sup')}",
+		  end:function(){
+			  $('.tabs_li').removeClass('active');
+			  $('.tabs_index').addClass('active');
+			  window.location.reload();
+		  }
+		});
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<include file="public@head"/>
+<style>
+    .sq-form{border-radius:5px;background-color: #fff;padding:30px;box-shadow: 3px 3px 3px #ececec;border: 1px solid #ececec;}
+    .sq-form-item{display: flex;align-items: center;margin-bottom: 20px;}
+    .sq-form-item .item-label{width: 130px;color: #999}
+    .sq-form-item .item-input{width: 300px;height: 38px;line-height: 38px;}
+</style>
+<body>
+    <div class="templatemo-content">'
+        <!--  我的应用左侧 -->
+        <include file="public@tube"/>
+        <!--  我的应用左侧 -->
+
+        <!--  修改资料-->
+        <div class="templatemo-body">
+            <h5>基本信息</h5>
+
+            <div class="sq-form">
+                <form class="layui-form" action="">
+                    <div class="sq-form-item">
+                        <div class="item-label">绑定邮箱：</div>
+                        <div class="item-input">
+                            <input name="user_email" required type="text" placeholder="请输入邮箱" value="{$user.user_email}" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="sq-form-item">
+                        <div class="item-label">用户昵称：</div>
+                        <div class="item-input">
+                            <input name="user_nickname" required type="text" value="{$user.user_nickname}" placeholder="请输入用户昵称" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="sq-form-item">
+                        <div class="item-label">手机号：</div>
+                        <div class="item-input">
+                            {$user.mobile}
+                        </div>
+                    </div>
+
+                    <div class="sq-form-item">
+                        <div class="item-label">信用额度：</div>
+                        <div class="item-input">
+                            暂未开通
+                        </div>
+                    </div>
+                    <div class="sq-form-item">
+                        <div class="item-label">专属客服：</div>
+                        <div class="item-input">
+                            <a target="_blank" href="tencent://message/?uin={$site_info['site_admin_qq']|default=''}&amp;Site=qq&amp;Menu=yes" style="color:#348ef1 ">{$site_info['site_admin_qq']|default=''}</a>
+                        </div>
+                    </div>
+                    <div class="sq-form-item">
+                        <div class="item-label"></div>
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="form_profile">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--  修改资料-->
+    </div>
+</body>
+
+<include file="public@footer"/>
+<script src="__STATIC__/js/table_temp.js"></script>
+<script>
+$(function () {
+    
+
+        layui.use(['form','layer','table','upload','element'], function () {
+            var form = layui.form,
+                layer = layui.layer,
+                table = layui.table,
+                upload = layui.upload,
+                element = layui.element;
+
+            //修改提交
+            form.on('submit(form_profile)',function(data){
+                console.log(data);
+                data = data.field;
+                console.log(data);
+                $.post("{:url('profile/editPost')}",data,function(res){
+                    if(res.code==200){
+                        layer.msg('修改成功',{icon:6});
+                    }else{
+                        layer.msg('修改失败',{icon:5});
+                    }
+                });
+                return false;
+            });
+            form.render()
+        })
+})
+</script>

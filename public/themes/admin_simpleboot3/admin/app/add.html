@@ -1,0 +1,52 @@
+<include file="public@header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a>安装记录</a></li>
+    </ul>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th width="50" style="text-align: center;">UDID</th>
+            <th style="text-align: center;">设备型号</th>
+            <th style="text-align: center;">系统版本</th>
+            <th style="text-align: center;">APP版本</th>
+            <th style="text-align: center;">IP</th>
+            <th style="text-align: center;">装机时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="u_list" item="vo">
+            <if condition="$vo.id">
+                <tr>
+                    <td align="center">
+                        {$vo.udid}
+                    </td>
+                    <td align="center">
+                        {$vo.device_name}
+                    </td>
+                    <td align="center">
+                        {$vo.ios_version}
+                    </td>
+                    <td align="center">
+                        {$vo.version}
+                    </td>
+                    <td align="center">
+                        {$vo.ip}
+                    </td>
+                    <td align="center">
+                        {$vo.create_time}
+                    </td>
+                </tr>
+            </if>
+        </foreach>
+        </tbody>
+    </table>
+    <div class="pagination">{$u_page}</div>
+</div>
+</body>
+<script>
+
+</script>
+</html>

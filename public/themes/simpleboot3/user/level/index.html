@@ -1,0 +1,163 @@
+<include file="public@head"/>
+
+<style>
+    .layui-layer-prompt .layui-layer-btn{text-align: center}
+    .layui-layer-prompt .layui-layer-input{width: 100%;box-sizing: border-box;text-align: center}
+</style>
+
+<body class="body-white">
+    <div class="templatemo-content">
+        <!--  我的应用左侧 -->
+        <include file="public@tube"/>
+        <!--  我的应用左侧 -->
+
+        <!--  内容中心 -->
+        <div class="templatemo-body">
+            <div class="sq-app">
+                <div class="sq-app__title">我的下级</div>
+                <div class="sq-app__table">
+                    <table class="layui-table sq-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>用户名</th>
+                                <th>电话</th>
+                                <th>已用设备数</th>
+                                <th>剩余设备数</th>
+                                <th>备注</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <if condition="count($list) == 0">
+                                <tr class="">
+                                    <td colspan="6">
+                                        <img style="max-width: 300px" src="__TMPL__/public/static/image/abnor_no_data.png?x-oss-process=style/default">
+                                        <p style="font-size: 16px;margin-top: 20px;margin-bottom: 20px">
+                                            你未代理任何用户
+                                        </p>
+                                        <!--<a href="tencent://message/?uin={$site_info['site_admin_qq']|default=''}&amp;Site=qq&amp;Menu=yes" target="_blank" class="sq-btn" style="width: 300px;margin-bottom: 30px;">-->
+                                        <!--    成为代理-->
+                                        <!--</a>-->
+                                       <a href="#" class="sq-btn" style="width: 300px;margin-bottom: 30px;" onclick="setPid()" class="">添加下级</a>
+                                    </td>
+                                </tr>
+                            <else/>
+                                <foreach name="list" item="vo">
+                                   <tr>
+                                       <td>{$vo.id}</td>
+                                       <td>{$vo.mobile}</td>
+                                       <td>
+                                           <if ($vo.user_nickname)>
+                                               {$vo.user_nickname}
+                                               <else />
+                                               昵称为空
+                                           </if>
+                                       </td>
+                                       <td>{$vo.count_udid}</td>
+                                       <td>{$vo.sup_down_public}</td>
+                                       <td>{$vo.more}</td>
+                                       <td>
+                                           <a href="#" style="color: #0c85da" onclick="downData({$vo.id})" class="">充值</a>&nbsp;|
+                                           <a href="#" style="color: #0c85da" onclick="toLevel({$vo.id})" class="">应用发布</a>&nbsp;|
+                                           <a href="#" style="color: red" onclick="deleteUser({$vo.id})" class="">删除用户</a>
+                                       </td>
+                                   </tr>
+                                </foreach>
+                            </if>
+                           
+                        </tbody>
+                    </table>
+                    <div class="sq-page">{$page}</div>
+                </div>
+               <if condition="count($list) != 0">
+                 <a href="#" class="sq-btn" style="width: 300px;margin-bottom: 30px;" onclick="setPid()" class="">添加下级</a>
+               </if>  
+            </div>
+        </div>
+        <!--  内容中心 -->
+    </div>
+
+    <script type="text/javascript">
+    	function toLevel(uid){
+			layer.open({
+			  type: 2,
+			  area: ['80%', '80%'],
+			  fixed: false, //不固定
+			  maxmin: true,
+			  title:'下级管理',
+			  content: "{:url('user/level/list')}?uid="+uid+"&page=1"
+			});
+		}
+	
+        function downData(uid){
+			layer.prompt({
+                title: '输入充值数量：自身剩余设备数：{$sup_down_public}'
+            }, function(text, index){
+				$.get('{:url("level/recharge")}?num='+text+'&sid='+uid,function(res){
+					if(res.code==200){
+						layer.msg(res.msg,{icon:6});
+					}else{
+						layer.msg(res.msg,{icon:5});
+					}
+					window.location.reload();
+					layer.close(index);
+				});
+			});
+        }
+        
+         function setPid(){
+            layer.open({
+                title: '输入下级信息',
+                area: ['760px', '450px'], //自定义文本域宽高
+                btn:['确定','取消'],
+                content: "<div><p>账号:</p><input type='text' id= 'mobile' class='layui-input' placeholder='输入手机号'/></div>"+
+                "<br/><div><p>密码:</p><input type='password' id= 'password' class='layui-input' placeholder='输入密码'/></div>"+
+                "<br/><div><p>备注:</p><textarea name='more' id='more' style='width:700px;height:80px;'></textarea>",
+                yes: function (index, layero) {
+                    var password=$("#password").val();
+                    var mobile=$("#mobile").val();
+                    var more=$("#more").val();
+                   // alert(more);exit();
+                    $.get('{:url("level/setpid")}?mobile='+mobile+'&password='+password+'&more='+more,function(res){
+                        if(res.code==200){
+                            layer.msg(res.msg,{icon:6,time: 2000}, function(){
+                                window.location.reload();
+                            });
+                        }else{
+                            layer.msg(res.msg,{icon:5,time: 2000}, function(){
+                                //  window.location.reload();
+                            });
+                        }
+                        layer.close(index);
+
+                    });
+                }
+            });
+        }
+        function deleteUser(uid){
+            layer.open({
+                title: '信息',
+                btn:['确定','取消'],
+                content:'确认删除？',
+                yes: function (index, layero) {
+                    $.get('{:url("level/delete")}?sid=' + uid, function (res) {
+                         if(res.code==200){
+                            layer.msg(res.msg,{icon:6,time: 2000}, function(){
+                                window.location.reload();
+                            });
+                        }else{
+                            layer.msg(res.msg,{icon:5,time: 2000}, function(){
+                                //  window.location.reload();
+                            });
+                        }
+                        layer.close(index);
+                    });
+                }
+            });
+        }
+    </script>
+</div>
+</body>
+
+<include file="public@footer"/>
