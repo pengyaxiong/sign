@@ -7,13 +7,13 @@ return [
     // 数据库类型
     'type'     => 'mysql',
     // 服务器地址
-    'hostname' => '127.0.0.1',
+    'hostname' => 'rm-j6c6i70vk36cky8hd9o.mysql.rds.aliyuncs.com',
     // 数据库名
-    'database' => 'ozsign',
+    'database' => 'sign',
     // 用户名
-    'username' => 'ozsign',
+    'username' => 'root',
     // 密码
-    'password' => 'TBbaE8KZ2wAnJDb6',
+    'password' => 'Tctb31415',
     // 端口
     'hostport' => '3306',
     // 数据库编码默认采用utf8
