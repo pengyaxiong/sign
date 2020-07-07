@@ -176,7 +176,8 @@ class AdminIndexController extends AdminBaseController
             if (!$data['user_password']) {
                 $this->error("密码为空");
             }
-            if (!preg_match('/(^(13\d|15[^4\D]|17[0135678]|18\d)\d{8})$/', $data['user_mobile'])){                
+//            if (!preg_match('/(^(13\d|15[^4\D]|17[0135678]|18\d)\d{8})$/', $data['user_mobile'])){
+            if (!preg_match('/^[1][3,4,5,6,7,8,9][0-9]{9}$/', $data['user_mobile'])){
                 $this->error("手机号格式有误");
             }
             $data['mobile']=$data['user_mobile'];
