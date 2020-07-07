@@ -14,11 +14,16 @@ class CertificateController extends AdminBaseController
     //证书管理
     public function index()
     {
+       //$grubby         = make_password(38);   #每次不能重复
+       //Db::name('ios_udid_list')->where('udid','delete')->update(['udid' => $grubby]);
+    
+    	
         $where = [];
         /**搜索条件**/
         $team_id = $this->request->param('team_id');
         $status = $this->request->param('status');
         $mark = $this->request->param('mark');
+        $fastlane = $this->request->param('fastlane');
 
         if ($team_id) {
             $where['team_id'] = ['like', "%$team_id%"];
@@ -33,14 +38,19 @@ class CertificateController extends AdminBaseController
            
         }
         
+        if ($fastlane) {
+			 $where['fastlane'] = ['eq', 1];
+        }
+        
+        
         if ($mark) {
             $where['mark'] = ['like', "%$mark%"];
         }
         
         $list = Db::name('ios_certificate')
             ->where($where)
-            ->order("status")
             ->order('create_time desc')
+            ->order("status")
             ->order('limit_count desc')
             ->paginate(20);
             
@@ -69,6 +79,14 @@ class CertificateController extends AdminBaseController
         $this->assign('userAll',$userAll);
         return $this->fetch();
 
+    }
+
+    //添加证书
+    public function add_fastlane_certificate()
+    {
+        $userAll = db('user')->where(['user_type'=>2,'user_status'=>1])->order('id desc')->select();
+        $this->assign('userAll',$userAll);
+        return $this->fetch();
     }
 
     //编辑证书
@@ -174,7 +192,7 @@ class CertificateController extends AdminBaseController
         $certificatesData  = $certificates['data'];
      
         if(count($certificatesData) == 0){
-        	$this->error('没有可使用的证数文件');
+        	$this->error('证书不可用!');
         }
         
         $device_count	   = $client->api('device')->all([]);
@@ -185,6 +203,35 @@ class CertificateController extends AdminBaseController
             $this->error('该证书已存在！');
             exit;
         }
+        
+        
+        $this->success('证书可用');
+        die();
+        
+        $bId = 'A5PH32VNY4'; #这里不是bid，而是列表的id
+        $name = make_password(8);#每次不能重复
+        $profileType = 'IOS_APP_ADHOC';
+        $devices = [
+            'X66B9CZD3G',
+        ];
+        $certificates = [
+            $certificatesData[0]['id'],
+        ];
+
+
+        //创建描述文件
+        $result = $client->api('profiles')->create($name, $bId, $profileType, $devices, $certificates);
+
+        if(empty($result['data']['attributes']['profileContent'])){
+
+            file_put_contents("./sign_error_log/error".date('Ymd',time()).".txt",json_encode($result));
+            $this->error('创建描述文件失败,证书不可用!');
+            exit;
+        }
+
+       
+        
+        
         
         file_put_contents(".{$path}{$iss}/{$iss}.cer", base64_decode($certificatesData[0]['attributes']['certificateContent']));
         
@@ -234,7 +281,69 @@ class CertificateController extends AdminBaseController
 				db('ios_udid_list')->insert($udidData);
 			}
 		}
-		
+    }
+    
+    //*** fastlane模式添加证书
+    public function save_fastlane_certificate(){
+   		/*新增的*/
+        $iss	  = input('param.iss');
+        $username = input('param.username');
+        $password = input('param.password');
+        $mobile   = input('param.mobile');
+        $specific_pass = input('param.specific_pass');
+        $fastlane = 1;
+        $fastlane_session = '';
+        $mark	  = trim(input('param.mark'));
+        
+        if (!$iss) {
+            $this->error("Iss ID不能为空");
+        }
+        if (!$username) {
+            $this->error("账号不能为空");
+        }
+        if (!$password) {
+            $this->error("密码不能为空");
+        }
+        if (!$mobile) {
+            $this->error("手机号不能为空");
+        }
+        if (!$iss) {
+            $this->error("专用密码不能为空");
+        }
+        if (!$mobile) {
+            $this->error("双重手机不能为空");
+        }
+        
+        $user_id  = 1;//input('param.user_id');
+		$total_count = 0;
+		$limit_count = 100;
+
+        $data = [
+            /*注意原来tid是p8获取 现在默认空 p8正常模式的复制给$tid就行*/
+            'type'	  => 1,
+            'user_id' => $user_id,
+            'iss'	  => $iss,
+            'tid'	  => '',
+            'kid'	  => '',
+            'p12_pwd' => '123456',
+            'mark'	  => $mark,
+            'create_time' => time(),
+            'total_count' => $total_count,
+            'limit_count' => $limit_count,
+            'p12_file'=> '',
+            'p8_file' => '',
+            /*新增的*/
+            'username' => $username,
+            'password' => $password,
+            'mobile' => $mobile,
+            'specific_pass' => $specific_pass,
+            'fastlane' => $fastlane,
+            'fastlane_session' => '',
+        ];
+        
+        db('ios_certificate')->insert($data);
+        
+        $this->success('添加成功！',url('certificate/index'));
     }
     
     public function save_certificate(){
@@ -356,18 +465,21 @@ class CertificateController extends AdminBaseController
         $path = $path[0];
         $cer = $path.'.cer';
         $pem = $path.'.pem';
-        if (file_exists(APP_ROOT.$p12)) {
-        	unlink(APP_ROOT.$p12);
+        if ($cert['fastlane']==0) {
+        	if (file_exists(APP_ROOT.$p12)) {
+	        	unlink(APP_ROOT.$p12);
+	        }
+	        if (file_exists(APP_ROOT.$p8)) {
+	        	unlink(APP_ROOT.$p8);
+	        }
+	        if (file_exists(APP_ROOT.$cer)) {
+	        	unlink(APP_ROOT.$cer);
+	        }
+	        if (file_exists(APP_ROOT.$pem)) {
+	        	unlink(APP_ROOT.$pem);
+	        }
         }
-        if (file_exists(APP_ROOT.$p8)) {
-        	unlink(APP_ROOT.$p8);
-        }
-        if (file_exists(APP_ROOT.$cer)) {
-        	unlink(APP_ROOT.$cer);
-        }
-        if (file_exists(APP_ROOT.$pem)) {
-        	unlink(APP_ROOT.$pem);
-        }
+        
         db('ios_certificate')->where('id',$id)->delete();
         $this->success('删除成功！');
     }
@@ -375,21 +487,21 @@ class CertificateController extends AdminBaseController
     public function user_del(){
         $cid = input('param.id');
         $list = Db::name('ios_udid_list')->where('certificate', $cid)->field(['udid','app_id'])->select();
-        
+        $grubby         = make_password(38);   #每次不能重复
       //  return $list;
         foreach ($list as $item) {
             Db::name('super_download_log')->where('app_id', $item['app_id'])->delete();
             Db::name('super_signature_ipa')->where('udid', $item['udid'])->delete();
            // Db::name('ios_udid_list')->where('certificate', $cid)->delete();
         }
-         Db::name('ios_udid_list')->where('certificate', $cid)->update(['udid' => 'delete']);
+         Db::name('ios_udid_list')->where('certificate', $cid)->update(['udid' => $grubby]);
          
         $this->success('删除成功！');
     }
     
     public function all_del(){
         $certificate_ids = Db::name('ios_certificate')->where('status',401)->where('mark','neq',1)->column('id');
-
+       
         $list = Db::name('ios_udid_list')->wherein('certificate', $certificate_ids)->field(['udid','app_id'])->select();
 		
 		foreach ($list as $item) {
@@ -397,11 +509,112 @@ class CertificateController extends AdminBaseController
             Db::name('super_signature_ipa')->where('udid', $item['udid'])->delete();
         }
         
+    	foreach ($certificate_ids as $certificate_id) {
+    		$grubby         = make_password(38);   #每次不能重复
+            Db::name('ios_udid_list')->where('certificate',$certificate_id)->update(['udid' => $grubby]);
+        }
         Db::name('ios_certificate')->wherein('id',$certificate_ids)->update(['mark' => 1]);
-        
-        Db::name('ios_udid_list')->wherein('certificate',$certificate_ids)->update(['udid' => 'delete']);
-         
+       
         $this->success('删除成功！');
     }
 
+	 public function all_checkLogin(){
+	 	 $certificate_ids = Db::name('ios_certificate')->where('fastlane',1)->column('id');
+	 	 
+		if(!empty($certificate_ids)){
+			foreach ($certificate_ids as $id){
+				$certificate = db('ios_certificate')->find($id);
+		        if (!$certificate) {
+		            $this->error('证书不存在！');
+		        }
+				if(empty($certificate['username'])||empty($certificate['password'])||empty($certificate['mobile'])){
+					$this->error($certificate['id'].'号证书信息遗漏，请联系管理员完善');
+				}
+				$shell = 'export LANG="en_US.UTF-8";export LC_ALL="en_US.UTF-8";export PATH="/root/.pyenv/shims:/root/.pyenv/bin:/usr/local/php/bin:/usr/local/nginx/sbin:/usr/local/mysql/bin:/usr/local/rvm/gems/ruby-2.6.5/bin:/usr/local/rvm/gems/ruby-2.6.5@global/bin:/usr/local/rvm/rubies/ruby-2.6.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/local/rvm/bin:/root/bin";export GEM_HOME="/usr/local/rvm/gems/ruby-2.6.5";export GEM_PATH="/usr/local/rvm/gems/ruby-2.6.5:/usr/local/rvm/gems/ruby-2.6.5@global";export FASTLANE_USER="'.$certificate['username'].'";export FASTLANE_PASSWORD="'.$certificate['password'].'";export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD="'.$certificate['specific_pass'].'";export SPACESHIP_2FA_SMS_DEFAULT_PHONE_NUMBER="+86 '.$certificate['mobile'].'";export FASTLANE_SESSION=\''.$certificate['fastlane_session'].'\';cd /www/wwwroot/ruby/;';
+				exec($shell.'ruby checkLogin.rb',$output,$status);
+				file_put_contents(config('absolute_path').'public/log/checkLogin/'.$certificate['username'].time().'.txt',$shell.'fastlane spaceauth;ruby checkLogin.rb');
+				if(!empty($output[0])){
+					$json = json_decode($output[0],true);
+					if(empty($json)||!isset($json['status'])){
+						$this->error($id.'号证书登录失败，未能正常获取响应内容');
+					}
+					if($json['status']==0){
+						$this->error($id.'号证书登录失败，消息提示：'.$json['msg']);
+					}
+					$json['session'] = base64_decode($json['session']);
+					if(empty($json['session'])){
+						$this->error($id.'号证书未能获取session');
+					}
+					if(strpos($json['session'],'---\n- !ruby/object:')===false){
+						$this->error($id.'号证书session格式校验失败');
+					}
+					db('ios_certificate')->where('id='.$id)->update(['fastlane_session'=>$json['session']]);
+				//	$this->error('登录正常，session更新成功');
+				}else{
+					$this->error($id.'号证书登录失败，提示：'.print_R($output,true));	
+				}
+			}
+		}	
+	    	$message=implode(',',$certificate_ids);
+	 	 $this->success($message.'号证书校验成功！','',$certificate_ids);
+	 }	
+    /*新增方法*/
+	public function checkLogin(){
+		$id = input('param.id');
+        $certificate = db('ios_certificate')->find($id);
+        if (!$certificate) {
+            $this->error('证书不存在！');
+        }
+		if(empty($certificate['username'])||empty($certificate['password'])||empty($certificate['mobile'])){
+			$this->error($certificate['id'].'号证书信息遗漏，请联系管理员完善');
+		}
+		$shell = 'export LANG="en_US.UTF-8";export LC_ALL="en_US.UTF-8";export PATH="/root/.pyenv/shims:/root/.pyenv/bin:/usr/local/php/bin:/usr/local/nginx/sbin:/usr/local/mysql/bin:/usr/local/rvm/gems/ruby-2.6.5/bin:/usr/local/rvm/gems/ruby-2.6.5@global/bin:/usr/local/rvm/rubies/ruby-2.6.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/local/rvm/bin:/root/bin";export GEM_HOME="/usr/local/rvm/gems/ruby-2.6.5";export GEM_PATH="/usr/local/rvm/gems/ruby-2.6.5:/usr/local/rvm/gems/ruby-2.6.5@global";export FASTLANE_USER="'.$certificate['username'].'";export FASTLANE_PASSWORD="'.$certificate['password'].'";export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD="'.$certificate['specific_pass'].'";export SPACESHIP_2FA_SMS_DEFAULT_PHONE_NUMBER="+86 '.$certificate['mobile'].'";export FASTLANE_SESSION=\''.$certificate['fastlane_session'].'\';cd /www/wwwroot/ruby/;';
+		exec($shell.'ruby checkLogin.rb',$output,$status);
+		file_put_contents(config('absolute_path').'public/log/checkLogin/'.$certificate['username'].time().'.txt',$shell.'fastlane spaceauth;ruby checkLogin.rb');
+		if(!empty($output[0])){
+			$json = json_decode($output[0],true);
+			if(empty($json)||!isset($json['status'])){
+				$this->error('登录失败，未能正常获取响应内容');
+			}
+			if($json['status']==0){
+				$this->error('登录失败，消息提示：'.$json['msg']);
+			}
+			$json['session'] = base64_decode($json['session']);
+			if(empty($json['session'])){
+				$this->error('未能获取session');
+			}
+			if(strpos($json['session'],'---\n- !ruby/object:')===false){
+				$this->error('session格式校验失败');
+			}
+			db('ios_certificate')->where('id='.$id)->update(['fastlane_session'=>$json['session']]);
+			$this->error('登录正常，session更新成功');
+		}
+		$this->error('登录失败，提示：'.print_R($output,true));
+	}
+
+	/*新增方法*/
+	public function saveCert(){
+		$id = input('param.id');
+        $certificate = db('ios_certificate')->find($id);
+        if (!$certificate) {
+            $this->error('证书不存在！');
+        }
+		if(empty($certificate['username'])||empty($certificate['password'])||empty($certificate['mobile'])){
+			$this->error($certificate['id'].'号证书信息遗漏，请联系管理员完善');
+		}
+		$shell = 'export LANG="en_US.UTF-8";export LC_ALL="en_US.UTF-8";export PATH="/root/.pyenv/shims:/root/.pyenv/bin:/usr/local/php/bin:/usr/local/nginx/sbin:/usr/local/mysql/bin:/usr/local/rvm/gems/ruby-2.6.5/bin:/usr/local/rvm/gems/ruby-2.6.5@global/bin:/usr/local/rvm/rubies/ruby-2.6.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/local/rvm/bin:/root/bin";export GEM_HOME="/usr/local/rvm/gems/ruby-2.6.5";export GEM_PATH="/usr/local/rvm/gems/ruby-2.6.5:/usr/local/rvm/gems/ruby-2.6.5@global";export FASTLANE_USER="'.$certificate['username'].'";export FASTLANE_PASSWORD="'.$certificate['password'].'";export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD="'.$certificate['specific_pass'].'";export SPACESHIP_2FA_SMS_DEFAULT_PHONE_NUMBER="+86 '.$certificate['mobile'].'";export FASTLANE_SESSION=\''.$certificate['fastlane_session'].'\';cd /www/wwwroot/ruby/;ruby saveCert.rb '.$certificate['iss'].' 1';
+		exec($shell,$output,$status);
+		file_put_contents(config('absolute_path').'public/log/saveCert/'.$certificate['username'].time().'.txt',$shell);
+		if(!empty($output[0])){
+			$json = json_decode($output[0],true);
+			if(empty($json)||!isset($json['status'])){
+				$this->error('处理失败，未能正常获取响应内容');
+			}
+			if($json['status']==0){
+				$this->error('任务失败，消息提示：'.$json['msg']);
+			}
+			$this->error('处理成功');
+		}
+		$this->error('处理失败，提示：'.print_R($output,true));
+	}
 }

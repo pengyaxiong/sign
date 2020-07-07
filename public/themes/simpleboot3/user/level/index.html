@@ -58,6 +58,7 @@
                                        <td>{$vo.sup_down_public}</td>
                                        <td>{$vo.more}</td>
                                        <td>
+                                       	  <a href="#" style="color: #0c85da" onclick="changeRemark({$vo.id})" class="">修改备注</a>&nbsp;|
                                            <a href="#" style="color: #0c85da" onclick="downData({$vo.id})" class="">充值</a>&nbsp;|
                                            <a href="#" style="color: #0c85da" onclick="toLevel({$vo.id})" class="">应用发布</a>&nbsp;|
                                            <a href="#" style="color: red" onclick="deleteUser({$vo.id})" class="">删除用户</a>
@@ -90,6 +91,22 @@
 			});
 		}
 	
+	function changeRemark(uid) {
+            layer.prompt({
+                title: '修改备注'
+            }, function(text, index){
+                $.get('{:url("level/changeremark")}?remark='+text+'&sid='+uid,function(res){
+                    if(res.code==200){
+                        layer.msg(res.msg,{icon:6});
+                    }else{
+                        layer.msg(res.msg,{icon:5});
+                    }
+                    window.location.reload();
+                    layer.close(index);
+                });
+            });
+        }
+        
         function downData(uid){
 			layer.prompt({
                 title: '输入充值数量：自身剩余设备数：{$sup_down_public}'
@@ -100,7 +117,11 @@
 					}else{
 						layer.msg(res.msg,{icon:5});
 					}
-					window.location.reload();
+					
+					 setTimeout(function(){ window.location.reload(); },1500);
+					 
+				//	window.location.reload();
+				
 					layer.close(index);
 				});
 			});

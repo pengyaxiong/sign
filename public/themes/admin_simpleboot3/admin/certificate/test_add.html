@@ -2,6 +2,13 @@
 </head>
 <body>
 <div class="wrap js-check-wrap">
+	
+	  <ul class="nav nav-tabs">
+        <li><a href="{:url('certificate/index')}">证书列表</a></li>
+        <li><a href="{:url('certificate/add_certificate')}">添加P8模式证书</a></li>
+        <li><a href="{:url('certificate/add_fastlane_certificate')}">添加Fastlane模式证书</a></li>
+        <li  class="active"><a href="{:url('certificate/test_add')}">证书测试</a></li>
+    </ul>
 
     <div class="wrap js-check-wrap" style="height:400px">
         <form class="form-horizontal js-ajax-form" action="{:url('certificate/testInput')}" method="post"
@@ -24,7 +31,7 @@
                 <input type="file" id="p8_file" name="p8_file">
                 <p class="help-block">请上传P8文件</p>
             </div>
-            <button type="submit" class="btn btn-default js-ajax-submit">保存</button>
+            <button type="submit" class="btn btn-default js-ajax-submit">检测</button>
         </form>
     </div>
 

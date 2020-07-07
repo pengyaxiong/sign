@@ -4,7 +4,9 @@
 <div class="wrap js-check-wrap">
     <ul class="nav nav-tabs">
         <li class="active"><a>证书列表</a></li>
-        <li><a href="{:url('certificate/add_certificate')}">添加证书</a></li>
+        <li><a href="{:url('certificate/add_certificate')}">添加P8模式证书</a></li>
+        <li><a href="{:url('certificate/add_fastlane_certificate')}">添加Fastlane模式证书</a></li>
+        <li><a href="{:url('certificate/test_add')}">证书测试</a></li>
     </ul>
 
  <form class="well form-inline margin-top-20" method="post" action="{:url('certificate/index')}">
@@ -19,9 +21,16 @@
             <option value="401" <if condition="input('request.status/s','') eq 401">selected = "selected"</if>>被封号</option>
             <option value="403" <if condition="input('request.status/s','') eq 403">selected = "selected"</if>>权限问题</option>
         </select>
+         &nbsp;&nbsp;&nbsp;类型:
+        <select  class="form-control" name="fastlane" id="">
+            <option value="0" selected = "selected">全部</option>
+            <option value="1" <if condition="input('request.fastlane/s','') eq 1">selected = "selected"</if>>登录校验</option>
+            
+        </select>
         <input type="submit" class="btn btn-primary" value="搜索"/>
         <a class="btn btn-danger" href="{:url('download/index')}">清空</a>
         <a class="btn btn-danger js-ajax-dialog-btn"  href="{:url('certificate/all_del')}">被封用户一键删除</a>
+        <a class="btn btn-primary js-ajax-dialog-btn"  href="{:url('certificate/all_checkLogin')}">一键登录校验</a>
     </form>
     
     <table class="table table-hover table-bordered margin-top-20">
@@ -87,6 +96,12 @@
                     <a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('certificate/certificate_del',array('id'=>$vo['id']))}">{:lang('DELETE')}</a>
                     
                     <a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('certificate/user_del',array('id'=>$vo['id']))}">用户</a>
+                    
+                    <br/>
+					<if condition="$vo['fastlane'] eq 1">
+	                    <a class="btn btn-xs btn-primary no_alert" style="margin-top:5px;" href="javascript:void(0)" data-url='{:url("certificate/checkLogin",array("id"=>$vo["id"]))}'>登录校验</a>
+	                    <a class="btn btn-xs btn-primary no_alert" style="margin-top:5px;" href="javascript:void(0)" data-url='{:url("certificate/saveCert",array("id"=>$vo["id"]))}'>证书更新</a>
+                    </if>
                 </td>
             </tr>
         </foreach>
@@ -104,6 +119,23 @@
 	.xxx{width:50px !important;}
 </style>
 <script>
+	$(".no_alert").on('click',function(){
+		var url=$(this).data('url');
+		var _this=$(this);
+	//	alert(url);
+		 $.get(url,function(data){
+		 	console.log(data);
+		 //	var result='session'.indexOf(data.msg);
+		 //	console.log(result);
+		 	if(data.msg=="登录正常，session更新成功"){
+		 		_this.remove();
+		 	}else if(data.msg=="处理成功"){
+		 		_this.remove();
+		 	}else{
+		 		_this.html("失败");
+		 	}
+		 });
+	})
 	function getUdid(cid){
 		layer.open({
 		  type: 2,

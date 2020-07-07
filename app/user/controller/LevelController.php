@@ -63,6 +63,17 @@ class LevelController extends UserBaseController
         return $this->fetch();
     }
 
+//修改备注
+    public function changeremark()
+    {
+        $uid = get_user('id');
+        $remark = input('remark');
+        $sid = input('sid');
+        Db::name('user')->where('id', $sid)->update(['more' => $remark]);
+        
+        return json(['code' => 200, 'msg' => '修改成功']);
+
+    }
 
     //下线充值
     public function recharge(){
@@ -71,9 +82,21 @@ class LevelController extends UserBaseController
         $sup_down_public = $sup_down_public['sup_down_public'];//自身公有池数量
         $num = input('num');
         $sid = input('sid');
-        if(!is_numeric($num) || $num > $sup_down_public || $num<0){
+        if(!is_numeric($num) || $num > $sup_down_public){
             return json(['code'=>0,'msg'=>'数据无效']);
         }
+        
+        $s_down_public = Db::name('user')->where('id', $sid)->field('sup_down_public')->find();
+        $s_down_public = $s_down_public['sup_down_public'];//下级公有池数量
+        $s_num=$s_down_public+$num;
+        if ($s_num<0) {
+            return json(['code' => 0, 'msg' => '下级公有池数量不足']);
+        }
+        
+        if ($uid == $sid) {
+            return json(['code' => 0, 'msg' => '数据无效']);
+        }
+        
         //事务开始
         Db::startTrans();
         try{

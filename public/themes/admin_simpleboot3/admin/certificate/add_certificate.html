@@ -4,7 +4,9 @@
 <div class="wrap">
     <ul class="nav nav-tabs">
         <li><a href="{:url('certificate/index')}">证书列表</a></li>
-        <li class="active"><a>添加证书</a></li>
+        <li class="active"><a>添加P8模式证书</a></li>
+        <li><a href="{:url('certificate/add_fastlane_certificate')}">添加Fastlane模式证书</a></li>
+         <li><a href="{:url('certificate/test_add')}">证书测试</a></li>
     </ul>
     <form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('certificate/save_certificate')}" enctype="multipart/form-data">
         <input type="hidden" value="{$certificate.id|default=''}">

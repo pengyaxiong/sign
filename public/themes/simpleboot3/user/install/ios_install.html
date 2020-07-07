@@ -236,7 +236,9 @@
     
                 req.responseType = "blob";
                 req.addEventListener("progress", function (e) {
+                	
                     var percent = Math.floor(100*e.loaded/e.total)
+                 //   console.log(percent);
                     $('.j-download-ipa').addClass('active');
                     $('.j-down-text').html('下载中 '+percent+'%');
                     $('.j-download-progress').css('width',percent+"%");

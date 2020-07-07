@@ -12,6 +12,7 @@ class CertificateController extends HomeBaseController
     //证书管理
     public function index()
     {
+    	
         if (!cmf_is_user_login()) {
             $this->error('请先登录后操作！');
             exit;

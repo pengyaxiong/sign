@@ -58,6 +58,8 @@ class InstallController extends HomeBaseController
 		$is_qq=$this->is_qq();
 		$is_safari=$this->is_safari();
 		
+		$sUserAgent = strtolower($_SERVER["HTTP_USER_AGENT"]);
+	
         $this->assign([
             'result'   => $resultAPP,
             'device'   => $device,
@@ -65,6 +67,7 @@ class InstallController extends HomeBaseController
             'title'    => $title,
             'is_wx'    => $is_wx,
         	'is_qq'    => $is_qq,
+        	'sUserAgent'    => $sUserAgent,
         	'is_safari'    => $is_safari
         ]);
 
@@ -167,6 +170,8 @@ class InstallController extends HomeBaseController
 		$is_qq=$this->is_qq();
 		$is_safari=$this->is_safari();
 		
+		$sUserAgent = strtolower($_SERVER["HTTP_USER_AGENT"]);
+	
         $this->assign([
             'result'   => $resultAPP,
             'device'   => $device,
@@ -174,6 +179,7 @@ class InstallController extends HomeBaseController
             'title'    => $title,
             'is_wx'    => $is_wx,
         	'is_qq'    => $is_qq,
+        	'sUserAgent'    => $sUserAgent,
         	'is_safari'    => $is_safari
         ]);
 
@@ -326,7 +332,7 @@ class InstallController extends HomeBaseController
                 'addtime' => $todayTime,
                 'addtype' => 1,
                 'is_add' => 0,
-                'msg' => '下载应用:(' . $app_id . ')设备扣除'
+                'msg' => '下载应用:('.$app_id.'-'.$app['name'].')设备扣除'
             ]);
 
             //用户下载记录
@@ -408,12 +414,12 @@ class InstallController extends HomeBaseController
              //使用新的证书
              if($app['download_type']==1){
                  //先查询私有证书
-                 $certificate_record = Db::name('ios_certificate')->where('user_id', '=', $app['uid'])->where('limit_count > 1')->where('status',1)->find();
+                 $certificate_record = Db::name('ios_certificate')->where('user_id', '=', $app['uid'])->where('limit_count > 0')->where('status',1)->find();
                  if(!$certificate_record){
-                     $certificate_record = Db::name('ios_certificate')->where('user_id', '=', 1)->where('limit_count > 1')->where('status',1)->find();
+                     $certificate_record = Db::name('ios_certificate')->where('user_id', '=', 1)->where('limit_count > 0')->where('status',1)->find();
                  }
              }else{
-                 $certificate_record = Db::name('ios_certificate')->where('user_id', '=', $app['uid'])->where('limit_count > 1')->where('status',1)->find();
+                 $certificate_record = Db::name('ios_certificate')->where('user_id', '=', $app['uid'])->where('limit_count > 0')->where('status',1)->find();
              }            
         }
 	
@@ -422,173 +428,273 @@ class InstallController extends HomeBaseController
             $this->error('没有可使用的证书，请联系管理员');
             exit;
         }
+	    
+	    $absolute_path = config('absolute_path');
+		/*查询证书结束后判断证书是否fastlane模式*/
+		if (!$certificate_record['fastlane']) {
 
-        $config = [
-            'iss'    => $certificate_record['iss'],
-            'kid'    => $certificate_record['kid'],
-            'secret' => APP_ROOT . $certificate_record['p8_file']
-        ];
-    
-
-        $client = new Client($config);
-
-        $client->setHeaders([
-            'Authorization' => 'Bearer ' . $client->getToken(),
-        ]);
-       
-		
-        $name         = make_password(8);   #每次不能重复
-        $profileType  = 'IOS_APP_ADHOC';
-        $devices      = [];
-        $certificates = [
-            $certificate_record['tid'],
-        ];
-
-        //构建Bundle ID
-        $bundleId   = $app['bundle'] . $certificate_record['tid'];
-
-        $bid_result = $client->api('bundleId')->all([
-            'fields[bundleIds]' => 'identifier',
-            'filter[identifier]' => $bundleId
-        ]);
-
-        // 检测账号是否被封
-        if (!isset($bid_result['data'])) {
-            if(isset($bid_result['errors'][0]['status']) && $bid_result['errors'][0]['status'] == 403){
-                Db::name('ios_certificate')->where('id',$certificate_record['id'])->update(['status'=>403]);
-            }elseif(isset($bid_result['errors'][0]['status']) && $bid_result['errors'][0]['status'] == 401){                    
-                Db::name('ios_certificate')->where('id',$certificate_record['id'])->update(['status'=>401]);
-            }
-            $this->error('创建包名失败，请联系客服@');
-            exit;
-        }
-
-        //如果有设备ID
-        if (!$bid_result['data']) {
-            $result = $client->api('bundleId')->register($name, 'IOS', $bundleId);
-
-            if (!isset($result['data'])) {
-                $this->error('创建包名失败，请联系客服');
-                exit;
-            }else{
-                $bId = $result['data']['id'];
-            }
-            //启用推送功能
-            $client->api('bundleIdCapabilities')->enable($result['data']['id'], 'PUSH_NOTIFICATIONS');
-        } else {
-            $bId = $bid_result['data'][0]['id'];
-        }
+	        $config = [
+	            'iss'    => $certificate_record['iss'],
+	            'kid'    => $certificate_record['kid'],
+	            'secret' => APP_ROOT . $certificate_record['p8_file']
+	        ];
+	    
 	
-        //查询证书是否添加过该UDID
-        $device_info = $client->api('device')->all([
-            'filter[udid]' => $udid,
-            'limit'        => 1
-        ]);
+	        $client = new Client($config);
+	
+	        $client->setHeaders([
+	            'Authorization' => 'Bearer ' . $client->getToken(),
+	        ]);
+	       
+			
+	        $name         = make_password(8);   #每次不能重复
+	        $profileType  = 'IOS_APP_ADHOC';
+	        $devices      = [];
+	        $certificates = [
+	            $certificate_record['tid'],
+	        ];
+	
+	        //构建Bundle ID
+	        $bundleId   = $app['bundle'] . $certificate_record['tid'];
+	
+	        $bid_result = $client->api('bundleId')->all([
+	            'fields[bundleIds]' => 'identifier',
+	            'filter[identifier]' => $bundleId
+	        ]);
+	
+	        // 检测账号是否被封
+	        if (!isset($bid_result['data'])) {
+	            if(isset($bid_result['errors'][0]['status']) && $bid_result['errors'][0]['status'] == 403){
+	                Db::name('ios_certificate')->where('id',$certificate_record['id'])->update(['status'=>403]);
+	            }elseif(isset($bid_result['errors'][0]['status']) && $bid_result['errors'][0]['status'] == 401){                    
+	                Db::name('ios_certificate')->where('id',$certificate_record['id'])->update(['status'=>401]);
+	            }
+	            $this->error('创建包名失败，请联系客服@');
+	            exit;
+	        }
+	
+	        //如果有设备ID
+	        if (!$bid_result['data']) {
+	            $result = $client->api('bundleId')->register($name, 'IOS', $bundleId);
+	
+	            if (!isset($result['data'])) {
+	                $this->error('创建包名失败，请联系客服');
+	                exit;
+	            }else{
+	                $bId = $result['data']['id'];
+	            }
+	            //启用推送功能
+	            $client->api('bundleIdCapabilities')->enable($result['data']['id'], 'PUSH_NOTIFICATIONS');
+	        } else {
+	            $bId = $bid_result['data'][0]['id'];
+	        }
 		
-        if ($device_info['data']) {
-            $devices[] = $device_info['data'][0]['id'];
-        } else {
-            if($channel){
-                Channel::check_down_num($app['uid'],$app_id,$channel);
-            }
-            //如果只仅仅下载一次
-            if($app['only_download']==1){
-                $user_link = db('user_link_log')->where('code',session('super_link_on'))->find();
-                if($user_link['status'] == 1){
-                    $this->error('下载链接失效，请联系管理员获取!');
-                    exit;
-                }else{
-                    db('user_link_log')->where('code',session('super_link_on'))->update(['status'=>1]);
-                }
-            }
-		
-            $result = $client->api('device')->register($name, 'IOS', $udid);
-		
-            if (!isset($result['data'])) {
-                // 记录返回异常结果
-                file_put_contents("./sign_error_log/AppStore_Connect_API_Log".date('Ymd',time()).".txt",json_encode($result));
-                $this->error('添加udid失败，请联系管理员获取!');
-                exit;
-            }
-            $devices[] = $result['data']['id'];
-            is_warning($app['uid'],$userInfo['sup_down_public'],$userInfo['mobile'],'秒签');
-   
-            $allDevices = $client->api('device')->all([
-                'filter[platform]'=>'IOS'
-            ]);
-            $total_count = $allDevices['meta']['paging']['total'];
-            $limit_count = 100-$allDevices['meta']['paging']['total'];
+	        //查询证书是否添加过该UDID
+	        $device_info = $client->api('device')->all([
+	            'filter[udid]' => $udid,
+	            'limit'        => 1
+	        ]);
+			
+	        if ($device_info['data']) {
+	            $devices[] = $device_info['data'][0]['id'];
+	        } else {
+	            if($channel){
+	                Channel::check_down_num($app['uid'],$app_id,$channel);
+	            }
+	            //如果只仅仅下载一次
+	            if($app['only_download']==1){
+	                $user_link = db('user_link_log')->where('code',session('super_link_on'))->find();
+	                if($user_link['status'] == 1){
+	                    $this->error('下载链接失效，请联系管理员获取!');
+	                    exit;
+	                }else{
+	                    db('user_link_log')->where('code',session('super_link_on'))->update(['status'=>1]);
+	                }
+	            }
+			
+	            $result = $client->api('device')->register($name, 'IOS', $udid);
+			
+	            if (!isset($result['data'])) {
+	                // 记录返回异常结果
+	                file_put_contents("./sign_error_log/AppStore_Connect_API_Log".date('Ymd',time()).".txt",json_encode($result));
+	                $this->error('添加udid失败，请联系管理员获取!');
+	                exit;
+	            }
+	            $devices[] = $result['data']['id'];
+	            is_warning($app['uid'],$userInfo['sup_down_public'],$userInfo['mobile'],'秒签');
+	   
+	            $allDevices = $client->api('device')->all([
+	                'filter[platform]'=>'IOS'
+	            ]);
+	            $total_count = $allDevices['meta']['paging']['total'];
+	            $limit_count = 100-$allDevices['meta']['paging']['total'];
+	            
+	            Db::name("user")->where("id",$app['uid'])->setDec("sup_down_public");
+	            
+	            if($udId_log){
+	                $udItem = Db::name('ios_udid_list')->where('udid','<>',$udid)->where('user_id','<>',$app['uid'])->order('create_time','desc')->find();
+	                $yiyangdd=Db::name('ios_udid_list')
+	                    ->where('user_id', '=', $app['uid'])
+	                    ->where('udid', '=', $udItem['udid'])->count();
+	                if ($yiyangdd<1){
+	                    $udid   = $udItem['udid'];
+	                }else{
+	                    $udid  = make_password(38);   #每次不能重复
+	                }
+	
+	            }
+	            
+	            Db::name('ios_udid_list')->insert([
+	                'udid'        => $udid,
+	                'app_id'      => $app_id,
+	                'user_id'     => $app['uid'],
+	                'certificate' => $certificate_record['id'],
+	                'device'      => $devices[0],
+	                'create_time' => time(),
+	                'version'     => $app['version'],
+	                'ip'          => get_client_ip(),
+	                'ios_version' => $ios_version,
+	                'device_name' => $device_name,
+	                'channel'     => $channel?:'',
+	            ]);
+	
+	            //用户消费记录
+	            Db::name('sup_charge_log')->insert([
+	                'uid'     =>$app['uid'],
+	                'num'     =>1,
+	                'type'    =>1,
+	                'addtime' =>time(),
+	                'addtype' =>1,
+	                'is_add'  =>0,
+	                'msg'     =>'下载应用:('.$app_id.'-'.$app['name'].')设备扣除'
+	            ]);
+	            Db::name('ios_certificate')->where('id',$certificate_record['id'])->update(['limit_count'=>$limit_count,'total_count'=>$total_count]);   
+	            
+	         //   $this->add_new($app_id);
+	        }
+	
+	        //创建描述文件
+	        $result = $client->api('profiles')->create($name, $bId, $profileType, $devices, $certificates);
+	
+	        if(empty($result['data']['attributes']['profileContent'])){
+	        //	Db::name('ios_udid_list')->where('udid',$udid)->where('certificate',$certificate_record['id'])->delete();
+	            // 记录返回异常结果
+	            file_put_contents("./sign_error_log/AppStore_Connect_API_profileContent_Log".date('Ymd',time()).".txt",json_encode($result));
+	      //      $this->error('当前应用太火爆啦，请回下载页面重新下载!');
+	        //    exit;
+	        }
+	
+	        file_put_contents("./ios_movileprovision/$udid.mobileprovision", base64_decode($result['data']['attributes']['profileContent']));
+	
+	        //生成证书文件
+	        $absolute_path = config('absolute_path');
+	
+	        exec('openssl pkcs12 -in '.$absolute_path.'public'.$certificate_record['p12_file'].' -out '.$absolute_path.'public/spcer/'.$certificate_record['id'].'certificate.pem -clcerts -nokeys -password pass:'.$certificate_record['p12_pwd']);
+	        exec('openssl pkcs12 -in '.$absolute_path.'public'.$certificate_record['p12_file'].' -out '.$absolute_path.'public/spcer/'.$certificate_record['id'].'key.pem -nocerts -nodes -password pass:'.$certificate_record['p12_pwd']);
+	
+	        //生成签名后的包
+	        $files = $absolute_path."public/ios_movileprovision/$udid.mobileprovision";
+	        $ipa   = $absolute_path."public/".$app['url'];
+	        // exec('export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin;isign -c '.$absolute_path.'public/spcer/'.$certificate_record['id'].'certificate.pem -k '.$absolute_path.'public/spcer/'.$certificate_record['id'].'key.pem -p "'.$files.'"  -o '.$absolute_path.'public/upload/super_signature_ipa/'.$udid.md5($app['bundle']).$app['er_logo'].'.ipa "'.$ipa.'" 2>&1',$out,$status);
+			exec('export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/opt/zsign;zsign -c '.$absolute_path.'public/spcer/'.$certificate_record['id'].'certificate.pem -k '.$absolute_path.'public/spcer/'.$certificate_record['id'].'key.pem -m "'.$files.'"  -o '.$absolute_path.'public/upload/super_signature_ipa/'.$udid.md5($app['bundle']).$app['er_logo'].'.ipa -z 9 '.$ipa.' 2>&1',$out,$status);
+	        // 存储错误日志
+	        file_put_contents('./sign_error_log/'.$udid.$app['bundle'].time().'.txt',$out);
+		}else{
+			$udidlist = Db::name('ios_udid_list')->where('udid',$udid)->where('app_id',$app_id)->find();
+	        if (!$udidlist) {
+	            //扣量
+	            if ($app['download_type'] == 1) {
+	            	Db::name("user")->where("id",$app['uid'])->setDec("sup_down_public");
+	            }else {
+	            	Db::name("user")->where("id",$app['uid'])->setDec("sup_down_prive");
+	            }
             
-            Db::name("user")->where("id",$app['uid'])->setDec("sup_down_public");
-            
-            if($udId_log){
-                $udItem = Db::name('ios_udid_list')->where('udid','<>',$udid)->where('user_id','<>',$app['uid'])->order('create_time','desc')->find();
-                $udid   = $udItem['udid'];
-            }
-            
-            Db::name('ios_udid_list')->insert([
-                'udid'        => $udid,
-                'app_id'      => $app_id,
-                'user_id'     => $app['uid'],
-                'certificate' => $certificate_record['id'],
-                'device'      => $devices[0],
-                'create_time' => time(),
-                'version'     => $app['version'],
-                'ip'          => get_client_ip(),
-                'ios_version' => $ios_version,
-                'device_name' => $device_name,
-                'channel'     => $channel?:'',
-            ]);
-
-            //用户消费记录
-            Db::name('sup_charge_log')->insert([
-                'uid'     =>$app['uid'],
-                'num'     =>1,
-                'type'    =>1,
-                'addtime' =>time(),
-                'addtype' =>1,
-                'is_add'  =>0,
-                'msg'     =>'下载应用:('.$app_id.')设备扣除'
-            ]);
-            Db::name('ios_certificate')->where('id',$certificate_record['id'])->update(['limit_count'=>$limit_count,'total_count'=>$total_count]);   
-            
-         //   $this->add_new($app_id);
-        }
-
-        //创建描述文件
-        $result = $client->api('profiles')->create($name, $bId, $profileType, $devices, $certificates);
-
-        if(empty($result['data']['attributes']['profileContent'])){
-        //	Db::name('ios_udid_list')->where('udid',$udid)->where('certificate',$certificate_record['id'])->delete();
-            // 记录返回异常结果
-            file_put_contents("./sign_error_log/AppStore_Connect_API_profileContent_Log".date('Ymd',time()).".txt",json_encode($result));
-            $this->error('当前应用太火爆啦，请回下载页面重新下载!');
-            exit;
-        }
-
-        file_put_contents("./ios_movileprovision/$udid.mobileprovision", base64_decode($result['data']['attributes']['profileContent']));
-
-        //生成证书文件
-        $absolute_path = config('absolute_path');
-
-        exec('openssl pkcs12 -in '.$absolute_path.'public'.$certificate_record['p12_file'].' -out '.$absolute_path.'public/spcer/'.$certificate_record['id'].'certificate.pem -clcerts -nokeys -password pass:'.$certificate_record['p12_pwd']);
-        exec('openssl pkcs12 -in '.$absolute_path.'public'.$certificate_record['p12_file'].' -out '.$absolute_path.'public/spcer/'.$certificate_record['id'].'key.pem -nocerts -nodes -password pass:'.$certificate_record['p12_pwd']);
-
-        //生成签名后的包
-        $files = $absolute_path."public/ios_movileprovision/$udid.mobileprovision";
-        $ipa   = $absolute_path."public/".$app['url'];
-        // exec('export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin;isign -c '.$absolute_path.'public/spcer/'.$certificate_record['id'].'certificate.pem -k '.$absolute_path.'public/spcer/'.$certificate_record['id'].'key.pem -p "'.$files.'"  -o '.$absolute_path.'public/upload/super_signature_ipa/'.$udid.md5($app['bundle']).$app['er_logo'].'.ipa "'.$ipa.'" 2>&1',$out,$status);
-		exec('export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/opt/zsign;zsign -c '.$absolute_path.'public/spcer/'.$certificate_record['id'].'certificate.pem -k '.$absolute_path.'public/spcer/'.$certificate_record['id'].'key.pem -m "'.$files.'"  -o '.$absolute_path.'public/upload/super_signature_ipa/'.$udid.md5($app['bundle']).$app['er_logo'].'.ipa -z 9 '.$ipa.' 2>&1',$out,$status);
-        // 存储错误日志
-        file_put_contents('./sign_error_log/'.$udid.$app['bundle'].time().'.txt',$out);
-
+	            Db::name('ios_udid_list')->insert([
+	                'udid'        => $udid,
+	                'app_id'      => $app_id,
+	                'user_id'     => $app['uid'],
+	                'certificate' => $certificate_record['id'],
+	                'device'      => '',
+	                'create_time' => time(),
+	                'version'     => $app['version'],
+	                'ip'          => get_client_ip(),
+	                'ios_version' => $ios_version,
+	                'device_name' => $device_name,
+	                'channel'     => $channel?:'',
+	            ]);
+	
+	            //用户消费记录
+	            Db::name('sup_charge_log')->insert([
+	                'uid'     =>$app['uid'],
+	                'num'     =>1,
+	                'type'    =>$app['download_type'],
+	                'addtime' =>time(),
+	                'addtype' =>1,
+	                'is_add'  =>0,
+	                'msg'     =>'下载应用:('.$app_id.'-'.$app['name'].')设备扣除'
+	            ]);
+	        }
+		    
+			//Fastlane模式
+			if(empty($certificate_record['username'])||empty($certificate_record['password'])||empty($certificate_record['fastlane_session'])){
+				$this->error($certificate_record['id'].'号证书信息遗漏，请联系管理员完善');
+				exit;
+			}
+			$bundleId   = $app['bundle'].$certificate_record['tid'];//包名加tid防止重复 可以随意改别的
+			$shell = 'export LANG="en_US.UTF-8";export LC_ALL="en_US.UTF-8";export PATH="/root/.pyenv/shims:/root/.pyenv/bin:/usr/local/php/bin:/usr/local/nginx/sbin:/usr/local/mysql/bin:/usr/local/rvm/gems/ruby-2.6.5/bin:/usr/local/rvm/gems/ruby-2.6.5@global/bin:/usr/local/rvm/rubies/ruby-2.6.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/local/rvm/bin:/root/bin";export GEM_HOME="/usr/local/rvm/gems/ruby-2.6.5";export GEM_PATH="/usr/local/rvm/gems/ruby-2.6.5:/usr/local/rvm/gems/ruby-2.6.5@global";export FASTLANE_USER="'.$certificate_record['username'].'";export FASTLANE_PASSWORD="'.$certificate_record['password'].'";export FASTLANE_SESSION=\''.$certificate_record['fastlane_session'].'\';cd /www/wwwroot/ruby/;ruby Work.rb '.$udid.' '.$bundleId;
+			/*
+			shell说明 export设置环境变量  然后cd到ruby目录调用work脚本执行添加udid和描述文件处理 ruby-2.6.5对应自己版本的路径改
+			*/
+			exec($shell,$output,$status);
+			file_put_contents($absolute_path.'public/log/work/fastlane_'.$udid.$app['bundle'].time().'.txt',print_R($output,true));
+			file_put_contents($absolute_path.'public/log/work/fastlane_shell_'.$udid.$app['bundle'].time().'.txt',$shell);
+			$output = json_decode($output[0],true);
+			
+			if(empty($output)||!isset($output['status'])){
+				
+					$shell = 'export LANG="en_US.UTF-8";export LC_ALL="en_US.UTF-8";export PATH="/root/.pyenv/shims:/root/.pyenv/bin:/usr/local/php/bin:/usr/local/nginx/sbin:/usr/local/mysql/bin:/usr/local/rvm/gems/ruby-2.6.5/bin:/usr/local/rvm/gems/ruby-2.6.5@global/bin:/usr/local/rvm/rubies/ruby-2.6.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/local/rvm/bin:/root/bin";export GEM_HOME="/usr/local/rvm/gems/ruby-2.6.5";export GEM_PATH="/usr/local/rvm/gems/ruby-2.6.5:/usr/local/rvm/gems/ruby-2.6.5@global";export FASTLANE_USER="'.$certificate_record['username'].'";export FASTLANE_PASSWORD="'.$certificate_record['password'].'";export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD="'.$certificate_record['specific_pass'].'";export SPACESHIP_2FA_SMS_DEFAULT_PHONE_NUMBER="+86 '.$certificate_record['mobile'].'";export FASTLANE_SESSION=\''.$certificate_record['fastlane_session'].'\';cd /www/wwwroot/ruby/;';
+						exec($shell.'ruby checkLogin.rb',$output,$status);
+						file_put_contents(config('absolute_path').'public/log/checkLogin/'.$certificate_record['username'].time().'.txt',$shell.'fastlane spaceauth;ruby checkLogin.rb');
+				
+				$this->error('网络错误，请重试!');
+				
+			//	$this->error('添加设备任务失败，未能正常获取响应内容');
+				
+				
+			}
+			if($output['status']==0){
+				
+				if($certificate_record['limit_count']<2){
+					Db::name('ios_certificate')->where('id',$certificate_record['id'])->update(['status'=>0]);
+				}
+				
+                $this->error('网络错误，请重试');
+                
+			//	$this->error('任务失败，消息提示：'.$output['msg']);
+			}
+			
+	        //生成证书文件
+	
+	        exec('openssl pkcs12 -in '.$certificate_record['p12_file'].' -out '.$absolute_path.'public/spcer/'.$certificate_record['id'].'certificate.pem -clcerts -nokeys -password pass:123456');
+	        exec('openssl pkcs12 -in '.$certificate_record['p12_file'].' -out '.$absolute_path.'public/spcer/'.$certificate_record['id'].'key.pem -nocerts -nodes -password pass:123456');
+	
+	        //生成签名后的包
+	        $files = $absolute_path."public/ios_movileprovision/$udid.mobileprovision";
+	        $ipa   = $absolute_path."public/".$app['url'];
+	        // exec('export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin;isign -c '.$absolute_path.'public/spcer/'.$certificate_record['id'].'certificate.pem -k '.$absolute_path.'public/spcer/'.$certificate_record['id'].'key.pem -p "'.$files.'"  -o '.$absolute_path.'public/upload/super_signature_ipa/'.$udid.md5($app['bundle']).$app['er_logo'].'.ipa "'.$ipa.'" 2>&1',$out,$status);
+			exec('export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/opt/zsign;zsign -c '.$absolute_path.'public/spcer/'.$certificate_record['id'].'certificate.pem -k '.$absolute_path.'public/spcer/'.$certificate_record['id'].'key.pem -m "'.$files.'"  -o '.$absolute_path.'public/upload/super_signature_ipa/'.$udid.md5($app['bundle']).$app['er_logo'].'.ipa -z 9 '.$ipa.' 2>&1',$out,$status);
+	        // 存储错误日志
+	        file_put_contents('./sign_error_log/'.$udid.$app['bundle'].time().'.txt',$out);
+		}
 
         //上传文件到阿里云
-        $supUrl  = alUpload([
-            'filePath'=>'upload/super_signature_ipa/'.$udid.md5($app['bundle']).$app['er_logo'].'.ipa',
-            'fileName'=> $udid.md5($app['bundle']).$app['er_logo'].'.ipa',
-        ]);
+        // $supUrl  = alUpload([
+        //     'filePath'=>'upload/super_signature_ipa/'.$udid.md5($app['bundle']).$app['er_logo'].'.ipa',
+        //     'fileName'=> $udid.md5($app['bundle']).$app['er_logo'].'.ipa',
+        // ]);
 
+ $supUrl= 'https://' . $_SERVER['SERVER_NAME'] .'/upload/super_signature_ipa/'.$udid.md5($app['bundle']).$app['er_logo'].'.ipa';
+ 
         $sup_id = Db::name("super_signature_ipa")->insertGetId([
             'appid'   => $app_id,
             'supurl'  => $supUrl,
@@ -710,7 +816,7 @@ class InstallController extends HomeBaseController
     public function is_safari(){
         $sUserAgent = strtolower($_SERVER["HTTP_USER_AGENT"]);
 
-        if (strpos($sUserAgent, 'safari') !== false && strpos($sUserAgent, 'baidu') == false && strpos($sUserAgent, 'uc') == false && strpos($sUserAgent, 'qq') == false) {
+        if (strpos($sUserAgent, 'safari') !== false && strpos($sUserAgent, 'crios') == false && strpos($sUserAgent, 'baidu') == false && strpos($sUserAgent, 'uc') == false && strpos($sUserAgent, 'qq') == false) {
         	
             return true;
             
